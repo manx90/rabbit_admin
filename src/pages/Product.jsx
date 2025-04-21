@@ -3,7 +3,7 @@ import React from "react";
 export default function Product() {
 	return (
 		<div className="ContentPage">
-			<HeaderProduct
+			{/* <HeaderProduct
 				title={"Catogories"}
 				AddNew={true}
 			/>
@@ -15,6 +15,8 @@ export default function Product() {
 			<UploadImage />
 			<SaveCancel />
 			<HeaderProduct title={"Products List"} />
+			<ProductList /> */}
+			
 		</div>
 	);
 }
@@ -359,13 +361,22 @@ function SaveCancel() {
 	);
 }
 
-
-function ProductList(){
-	return(
+function ProductList() {
+	return (
 		<div className="flex flex-col gap-2 w-full">
 			<div className="flex flex-row justify-between">
-				<button></button>
+				<button className="btn_Publish">
+					Published Products
+				</button>
+				<button className="btn_Publish">
+					Scheduled Products
+				</button>
+			</div>
+			<div className="flex flex-col">
+				<div className="flex flex-row">
+					<button>Name </button>
+				</div>
 			</div>
 		</div>
-	)
+	);
 }
