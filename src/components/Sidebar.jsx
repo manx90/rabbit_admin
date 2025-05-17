@@ -1,230 +1,158 @@
 import React from "react";
+import { Link, useLocation } from "react-router-dom";
 
 export default function Sidebar() {
+	const location = useLocation();
+
+	const menuItems = [
+		{
+			title: "Dashboard",
+			icon: (
+				<svg
+					className="w-6 h-6"
+					fill="none"
+					stroke="currentColor"
+					viewBox="0 0 24 24"
+				>
+					<path
+						strokeLinecap="round"
+						strokeLinejoin="round"
+						strokeWidth={2}
+						d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+					/>
+				</svg>
+			),
+			path: "/dashboard",
+		},
+		{
+			title: "Products",
+			icon: (
+				<svg
+					className="w-6 h-6"
+					fill="none"
+					stroke="currentColor"
+					viewBox="0 0 24 24"
+				>
+					<path
+						strokeLinecap="round"
+						strokeLinejoin="round"
+						strokeWidth={2}
+						d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
+					/>
+				</svg>
+			),
+			path: "/products",
+		},
+		{
+			title: "Orders",
+			icon: (
+				<svg
+					className="w-6 h-6"
+					fill="none"
+					stroke="currentColor"
+					viewBox="0 0 24 24"
+				>
+					<path
+						strokeLinecap="round"
+						strokeLinejoin="round"
+						strokeWidth={2}
+						d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+					/>
+				</svg>
+			),
+			path: "/orders",
+		},
+		{
+			title: "Customers",
+			icon: (
+				<svg
+					className="w-6 h-6"
+					fill="none"
+					stroke="currentColor"
+					viewBox="0 0 24 24"
+				>
+					<path
+						strokeLinecap="round"
+						strokeLinejoin="round"
+						strokeWidth={2}
+						d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
+					/>
+				</svg>
+			),
+			path: "/customers",
+		},
+		{
+			title: "Settings",
+			icon: (
+				<svg
+					className="w-6 h-6"
+					fill="none"
+					stroke="currentColor"
+					viewBox="0 0 24 24"
+				>
+					<path
+						strokeLinecap="round"
+						strokeLinejoin="round"
+						strokeWidth={2}
+						d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+					/>
+					<path
+						strokeLinecap="round"
+						strokeLinejoin="round"
+						strokeWidth={2}
+						d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+					/>
+				</svg>
+			),
+			path: "/settings",
+		},
+	];
+
 	return (
-		<div className="fixed left-0 top-0 w-100">
-			<div className="flex flex-col h-screen overflow-y-auto bg-black px-16">
-				<img
-					src="logo-white.png"
-					alt=""
-					className="w-[200px] my-[30px]"
-				/>
-				<div className="flex flex-col pb-[30px] gap-[40px] ">
-					<div className="relative">
-						<input
-							type="text"
-							className="Sidebar-Search"
-							placeholder="Search..."
-						/>
+		<div className="h-screen w-64 bg-white shadow-lg">
+			{/* Logo */}
+			<div className="p-4 border-b">
+				<div className="flex items-center justify-center">
+					<img src="/logo.png" alt="Logo" className="w-32" />
+				</div>
+			</div>
 
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							width="24"
-							height="25"
-							viewBox="0 0 24 25"
-							fill="none"
-							className="absolute left-2 top-1/2 -translate-y-1/2"
-						>
-							<mask
-								id="mask0_2197_16498"
-								style={{ maskType: "alpha" }}
-								maskUnits="userSpaceOnUse"
-								x="0"
-								y="0"
-								width="24"
-								height="25"
-							>
-								<rect
-									y="0.329102"
-									width="24"
-									height="24"
-									fill="#D9D9D9"
-								/>
-							</mask>
-							<g mask="url(#mask0_2197_16498)">
-								<path
-									d="M19.6 21.3291L13.3 15.0291C12.8 15.4291 12.225 15.7458 11.575 15.9791C10.925 16.2124 10.2333 16.3291 9.5 16.3291C7.68333 16.3291 6.14583 15.6999 4.8875 14.4416C3.62917 13.1833 3 11.6458 3 9.8291C3 8.01243 3.62917 6.47494 4.8875 5.2166C6.14583 3.95827 7.68333 3.3291 9.5 3.3291C11.3167 3.3291 12.8542 3.95827 14.1125 5.2166C15.3708 6.47494 16 8.01243 16 9.8291C16 10.5624 15.8833 11.2541 15.65 11.9041C15.4167 12.5541 15.1 13.1291 14.7 13.6291L21 19.9291L19.6 21.3291ZM9.5 14.3291C10.75 14.3291 11.8125 13.8916 12.6875 13.0166C13.5625 12.1416 14 11.0791 14 9.8291C14 8.5791 13.5625 7.5166 12.6875 6.6416C11.8125 5.7666 10.75 5.3291 9.5 5.3291C8.25 5.3291 7.1875 5.7666 6.3125 6.6416C5.4375 7.5166 5 8.5791 5 9.8291C5 11.0791 5.4375 12.1416 6.3125 13.0166C7.1875 13.8916 8.25 14.3291 9.5 14.3291Z"
-									fill="white"
-								/>
-							</g>
-						</svg>
+			{/* Menu Items */}
+			<nav className="mt-6">
+				{menuItems.map((item) => (
+					<Link
+						key={item.path}
+						to={item.path}
+						className={`flex items-center px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-200 ${
+							location.pathname === item.path
+								? "bg-blue-50 text-blue-600 border-r-4 border-blue-600"
+								: ""
+						}`}
+					>
+						<div className="flex items-center">
+							{item.icon}
+							<span className="ml-3 text-sm font-medium">
+								{item.title}
+							</span>
+						</div>
+					</Link>
+				))}
+			</nav>
+
+			{/* User Profile */}
+			<div className="absolute bottom-0 w-full p-4 border-t">
+				<div className="flex items-center">
+					<img
+						src="/avatar.png"
+						alt="User"
+						className="w-8 h-8 rounded-full"
+					/>
+					<div className="ml-3">
+						<p className="text-sm font-medium text-gray-700">
+							John Doe
+						</p>
+						<p className="text-xs text-gray-500">Admin</p>
 					</div>
-
-					<a href="#" className="Sidebar-Button">
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							width="24"
-							height="25"
-							viewBox="0 0 24 25"
-							fill="none"
-							className="my-auto"
-						>
-							<mask
-								id="mask0_2185_15043"
-								style={{ maskType: "alpha" }}
-								maskUnits="userSpaceOnUse"
-								x="0"
-								y="0"
-								width="24"
-								height="25"
-							>
-								<rect
-									y="0.329102"
-									width="24"
-									height="24"
-									fill="#D9D9D9"
-								/>
-							</mask>
-							<g mask="url(#mask0_2185_15043)">
-								<path
-									d="M13 9.3291V3.3291H21V9.3291H13ZM3 13.3291V3.3291H11V13.3291H3ZM13 21.3291V11.3291H21V21.3291H13ZM3 21.3291V15.3291H11V21.3291H3Z"
-									fill="white"
-								/>
-							</g>
-						</svg>
-						<span className="flex-none">
-							Dashboard
-						</span>
-					</a>
-					<a href="#" className="Sidebar-Button">
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							width="24"
-							height="25"
-							viewBox="0 0 24 25"
-							fill="none"
-							className="my-auto"
-						>
-							<mask
-								id="mask0_2185_15048"
-								style={{ maskType: "alpha" }}
-								maskUnits="userSpaceOnUse"
-								x="0"
-								y="0"
-								width="24"
-								height="25"
-							>
-								<rect
-									y="0.329102"
-									width="24"
-									height="24"
-									fill="#D9D9D9"
-								/>
-							</mask>
-							<g mask="url(#mask0_2185_15048)">
-								<path
-									d="M6 11.2791L5 11.8291C4.76666 11.9624 4.51666 11.9958 4.25 11.9291C3.98333 11.8624 3.78333 11.7124 3.65 11.4791L1.65 7.9791C1.51666 7.74577 1.48333 7.49577 1.55 7.2291C1.61666 6.96244 1.76666 6.76243 2 6.6291L7.75 3.3291H9.5C9.65 3.3291 9.77083 3.37493 9.8625 3.4666C9.95416 3.55827 10 3.6791 10 3.8291V4.3291C10 4.8791 10.1958 5.34994 10.5875 5.7416C10.9792 6.13327 11.45 6.3291 12 6.3291C12.55 6.3291 13.0208 6.13327 13.4125 5.7416C13.8042 5.34994 14 4.8791 14 4.3291V3.8291C14 3.6791 14.0458 3.55827 14.1375 3.4666C14.2292 3.37493 14.35 3.3291 14.5 3.3291H16.25L22 6.6291C22.2333 6.76243 22.3833 6.96244 22.45 7.2291C22.5167 7.49577 22.4833 7.74577 22.35 7.9791L20.35 11.4791C20.2167 11.7124 20.0208 11.8583 19.7625 11.9166C19.5042 11.9749 19.25 11.9374 19 11.8041L18 11.3041V20.3291C18 20.6124 17.9042 20.8499 17.7125 21.0416C17.5208 21.2333 17.2833 21.3291 17 21.3291H7C6.71666 21.3291 6.47916 21.2333 6.2875 21.0416C6.09583 20.8499 6 20.6124 6 20.3291V11.2791Z"
-									fill="white"
-								/>
-							</g>
-						</svg>
-						<span>Products</span>
-					</a>
-					<a href="#" className="Sidebar-Button">
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							width="24"
-							height="25"
-							viewBox="0 0 24 25"
-							fill="none"
-							className="my-auto"
-						>
-							<mask
-								id="mask0_2185_15053"
-								style={{ maskType: "alpha" }}
-								className="my-auto"
-								maskUnits="userSpaceOnUse"
-								x="0"
-								y="0"
-								width="24"
-								height="25"
-							>
-								<rect
-									y="0.329102"
-									width="24"
-									height="24"
-									fill="#D9D9D9"
-								/>
-							</mask>
-							<g mask="url(#mask0_2185_15053)">
-								<path
-									d="M8 17.3291C8.28333 17.3291 8.52083 17.2333 8.7125 17.0416C8.90417 16.8499 9 16.6124 9 16.3291C9 16.0458 8.90417 15.8083 8.7125 15.6166C8.52083 15.4249 8.28333 15.3291 8 15.3291C7.71667 15.3291 7.47917 15.4249 7.2875 15.6166C7.09583 15.8083 7 16.0458 7 16.3291C7 16.6124 7.09583 16.8499 7.2875 17.0416C7.47917 17.2333 7.71667 17.3291 8 17.3291ZM8 13.3291C8.28333 13.3291 8.52083 13.2333 8.7125 13.0416C8.90417 12.8499 9 12.6124 9 12.3291C9 12.0458 8.90417 11.8083 8.7125 11.6166C8.52083 11.4249 8.28333 11.3291 8 11.3291C7.71667 11.3291 7.47917 11.4249 7.2875 11.6166C7.09583 11.8083 7 12.0458 7 12.3291C7 12.6124 7.09583 12.8499 7.2875 13.0416C7.47917 13.2333 7.71667 13.3291 8 13.3291ZM8 9.3291C8.28333 9.3291 8.52083 9.23327 8.7125 9.0416C8.90417 8.84994 9 8.61243 9 8.3291C9 8.04577 8.90417 7.80827 8.7125 7.6166C8.52083 7.42493 8.28333 7.3291 8 7.3291C7.71667 7.3291 7.47917 7.42493 7.2875 7.6166C7.09583 7.80827 7 8.04577 7 8.3291C7 8.61243 7.09583 8.84994 7.2875 9.0416C7.47917 9.23327 7.71667 9.3291 8 9.3291ZM11 17.3291H17V15.3291H11V17.3291ZM11 13.3291H17V11.3291H11V13.3291ZM11 9.3291H17V7.3291H11V9.3291ZM5 21.3291C4.45 21.3291 3.97917 21.1333 3.5875 20.7416C3.19583 20.3499 3 19.8791 3 19.3291V5.3291C3 4.7791 3.19583 4.30827 3.5875 3.9166C3.97917 3.52493 4.45 3.3291 5 3.3291H19C19.55 3.3291 20.0208 3.52493 20.4125 3.9166C20.8042 4.30827 21 4.7791 21 5.3291V19.3291C21 19.8791 20.8042 20.3499 20.4125 20.7416C20.0208 21.1333 19.55 21.3291 19 21.3291H5Z"
-									fill="white"
-								/>
-							</g>
-						</svg>
-						<span>Order</span>
-					</a>
-					<a href="#" className="Sidebar-Button">
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							width="24"
-							height="25"
-							viewBox="0 0 24 25"
-							fill="none"
-							className="my-auto"
-						>
-							<mask
-								id="mask0_2185_15058"
-								style={{ maskType: "alpha" }}
-								className="my-auto"
-								maskUnits="userSpaceOnUse"
-								x="0"
-								y="0"
-								width="24"
-								height="25"
-							>
-								<rect
-									y="0.329102"
-									width="24"
-									height="24"
-									fill="#D9D9D9"
-								/>
-							</mask>
-							<g mask="url(#mask0_2185_15058)">
-								<path
-									d="M5 22.3291C4.45 22.3291 3.97917 22.1333 3.5875 21.7416C3.19583 21.3499 3 20.8791 3 20.3291V9.0541C2.7 8.87077 2.45833 8.63327 2.275 8.3416C2.09167 8.04994 2 7.71243 2 7.3291V4.3291C2 3.7791 2.19583 3.30827 2.5875 2.9166C2.97917 2.52493 3.45 2.3291 4 2.3291H20C20.55 2.3291 21.0208 2.52493 21.4125 2.9166C21.8042 3.30827 22 3.7791 22 4.3291V7.3291C22 7.71243 21.9083 8.04994 21.725 8.3416C21.5417 8.63327 21.3 8.87077 21 9.0541V20.3291C21 20.8791 20.8042 21.3499 20.4125 21.7416C20.0208 22.1333 19.55 22.3291 19 22.3291H5ZM4 7.3291H20V4.3291H4V7.3291ZM9 14.3291H15V12.3291H9V14.3291Z"
-									fill="white"
-								/>
-							</g>
-						</svg>
-						<span>inventory</span>
-					</a>
-					<a href="#" className="Sidebar-Button">
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							width="24"
-							height="25"
-							viewBox="0 0 24 25"
-							fill="none"
-							className="my-auto"
-						>
-							<mask
-								id="mask0_2185_15063"
-								style={{ maskType: "alpha" }}
-								className="my-auto"
-								maskUnits="userSpaceOnUse"
-								x="0"
-								y="0"
-								width="24"
-								height="25"
-							>
-								<rect
-									y="0.329102"
-									width="24"
-									height="24"
-									fill="#D9D9D9"
-								/>
-							</mask>
-							<g mask="url(#mask0_2185_15063)">
-								<path
-									d="M18 20.3291V17.3291H15V15.3291H18V12.3291H20V15.3291H23V17.3291H20V20.3291H18ZM3 21.3291C2.45 21.3291 1.97917 21.1333 1.5875 20.7416C1.19583 20.3499 1 19.8791 1 19.3291V5.3291C1 4.7791 1.19583 4.30827 1.5875 3.9166C1.97917 3.52493 2.45 3.3291 3 3.3291H17C17.55 3.3291 18.0208 3.52493 18.4125 3.9166C18.8042 4.30827 19 4.7791 19 5.3291V10.3291H17V8.3291H3V19.3291H16V21.3291H3ZM3 6.3291H17V5.3291H3V6.3291Z"
-									fill="white"
-								/>
-							</g>
-						</svg>
-						<span>Advertising</span>
-					</a>
 				</div>
 			</div>
 		</div>

@@ -1,7 +1,8 @@
 import React from "react";
-import { Button } from "flowbite-react";
+// import { Button } from "flowbite-react";
 import ComponentChart from "./../components/Charts";
 import MostBox from "./../components/MostBox";
+// import Sidebar from "../components/sidebar";
 export default function Dashboard() {
 	return (
 		<div className="ContentPage">
