@@ -1,318 +1,103 @@
-import React, { useState } from "react";
 import Table from "../components/Table";
 import { HeaderProduct } from "../components/HeaderProduct";
 import { SubCategory } from "../components/SubCategory";
 import { MainCategory } from "../components/MainCategory";
-
+import { Products } from "../components/products";
+import {
+	ProductProvider,
+	useProduct,
+} from "../Contexts/ProductPageContext";
 export default function Product() {
-	const [Message, setMessage] = useState({
-		type: "",
-		text: "",
-	});
-	const URL = "http://localhost:3003";
-	const [category, setCategory] = useState("");
-	const [
-		mainCategoryProduct,
-		setMainCategoryProduct,
-	] = useState([]);
-
 	return (
-		<div className="flex h-screen bg-gray-50">
-			{/* Main Content */}
-			<div className="flex-1 overflow-auto">
-				<div className="p-6 space-y-6">
-					{Message && Message.text !== "" && (
-						<div
-							className={`p-4 rounded-lg ${
-								Message.type === "success"
-									? "bg-green-100 text-green-700 border border-green-200"
-									: "bg-red-100 text-red-700 border border-red-200"
-							}`}
-						>
-							<div className="flex items-center gap-2">
-								{Message.type === "success" ? (
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										className="h-5 w-5"
-										viewBox="0 0 20 20"
-										fill="currentColor"
-									>
-										<path
-											fillRule="evenodd"
-											d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-											clipRule="evenodd"
-										/>
-									</svg>
-								) : (
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										className="h-5 w-5"
-										viewBox="0 0 20 20"
-										fill="currentColor"
-									>
-										<path
-											fillRule="evenodd"
-											d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-											clipRule="evenodd"
-										/>
-									</svg>
-								)}
-								<span>{Message.text}</span>
-							</div>
+		<ProductProvider>
+			<div className="ContentPage">
+				{/* Main Content */}
+				<Message />
+				<div className="flex-1 overflow-auto">
+					<div className="relative p-6 space-y-6">
+						<div className="animate-fadeIn">
+							<HeaderProduct
+								title={"Categories"}
+								AddNew={false}
+							/>
 						</div>
-					)}
-					<div className="animate-fadeIn">
-						<HeaderProduct
-							title={"Categories"}
-							AddNew={false}
-						/>
-					</div>
-					<div className="grid gap-6 md:grid-cols-2 lg:grid-cols-2 animate-slideUp">
-						<MainCategory
-							setCategory={setCategory}
-							setMessage={setMessage}
-							category={category}
-							URL={URL}
-						/>
-						<SubCategory
-							mainCategoryProduct={
-								mainCategoryProduct
-							}
-							setMainCategoryProduct={
-								setMainCategoryProduct
-							}
-							setMessage={setMessage}
-							Message={Message}
-						/>
-					</div>
-					<div className="animate-fadeIn">
-						<HeaderProduct title={"Products"} />
-					</div>
-					<div className="animate-slideUp">
-						<Products />
-					</div>
-					<div className="animate-fadeIn">
-						<UploadImage />
-					</div>
-					<div className="animate-slideUp">
-						<SaveCancel />
-					</div>
-					<div className="animate-fadeIn">
-						<HeaderProduct
-							title={"Products List"}
-						/>
-					</div>
-					<div className="animate-slideUp">
-						<Table />
+						<div className="grid gap-6 md:grid-cols-2 lg:grid-cols-2 animate-slideUp">
+							<MainCategory />
+							<SubCategory />
+						</div>
+						<div className="animate-fadeIn">
+							<HeaderProduct title={"Products"} />
+						</div>
+						<div className="animate-slideUp">
+							<Products />
+						</div>
+						<div className="animate-fadeIn">
+							<UploadImage />
+						</div>
+						<div className="animate-slideUp">
+							<SaveCancel />
+						</div>
+						<div className="animate-fadeIn">
+							<HeaderProduct
+								title={"Products List"}
+							/>
+						</div>
+						<div className="animate-slideUp">
+							<Table />
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>
+		</ProductProvider>
 	);
 }
-
-function Products() {
+function Message() {
+	const { Message } = useProduct();
 	return (
-		<form>
-			<div className="bg-white rounded-2xl p-6 border shadow-sm hover:shadow-md transition-shadow duration-200">
-				<div className="flex flex-col lg:flex-row gap-6">
-					<div className="flex flex-col gap-4 w-full">
-						<div className="flex flex-col gap-2">
-							<label
-								htmlFor="productName"
-								className="text-sm font-medium text-gray-700"
+		<>
+			{Message && Message.text !== "" && (
+				<div
+					className={`p-4 rounded-lg ${
+						Message.type === "success"
+							? "absolute top-5 right-15  z-10 bg-green-100 text-green-700 border border-green-200 transition duration-300 ease-in-out"
+							: "absolute top-5 right-15  z-10 bg-red-100 text-red-700 border border-red-200 transition duration-300 ease-in-out"
+					}`}
+				>
+					<div className="flex items-center gap-2">
+						{Message.type === "success" ? (
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								className="h-5 w-5"
+								viewBox="0 0 20 20"
+								fill="currentColor"
 							>
-								Name
-							</label>
-							<input
-								type="text"
-								id="productName"
-								className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
-								placeholder="Enter product name"
-							/>
-						</div>
-						<div className="flex flex-col gap-2">
-							<label
-								htmlFor="category"
-								className="text-sm font-medium text-gray-700"
-							>
-								Category
-							</label>
-							<select
-								id="category"
-								className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 bg-white text-gray-700"
-							>
-								<option value="">
-									Select Category
-								</option>
-								<option value="Men">Men</option>
-								<option value="Women">
-									Women
-								</option>
-								<option value="Kids">Kids</option>
-								<option value="Accessories">
-									Accessories
-								</option>
-							</select>
-						</div>
-						<div className="flex flex-col gap-2">
-							<label
-								htmlFor="subCategory"
-								className="text-sm font-medium text-gray-700"
-							>
-								Sub Category
-							</label>
-							<select
-								id="subCategory"
-								className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 bg-white text-gray-700"
-							>
-								<option value="">
-									Select Sub Category
-								</option>
-								<option value="Shirt">
-									Shirt
-								</option>
-								<option value="Pants">
-									Pants
-								</option>
-								<option value="Dress">
-									Dress
-								</option>
-								<option value="Skirt">
-									Skirt
-								</option>
-								<option value="Jacket">
-									Jacket
-								</option>
-							</select>
-						</div>
-					</div>
-					<div className="flex flex-col gap-2 w-full">
-						<label
-							htmlFor="description"
-							className="text-sm font-medium text-gray-700"
-						>
-							Description
-						</label>
-						<textarea
-							id="description"
-							rows="4"
-							className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 resize-none"
-							placeholder="Enter product description"
-						/>
-					</div>
-				</div>
-
-				<div className="mt-6">
-					<h3 className="text-lg font-medium text-gray-700 mb-4">
-						Product Variants
-					</h3>
-					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-						<div className="flex flex-col gap-2">
-							<label
-								htmlFor="size"
-								className="text-sm font-medium text-gray-700"
-							>
-								Size
-							</label>
-							<input
-								type="text"
-								id="size"
-								placeholder="Enter size"
-								className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
-							/>
-						</div>
-						<div className="flex flex-col gap-2">
-							<label
-								htmlFor="quantity"
-								className="text-sm font-medium text-gray-700"
-							>
-								Quantity
-							</label>
-							<input
-								type="number"
-								id="quantity"
-								min="0"
-								placeholder="Enter quantity"
-								className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
-							/>
-						</div>
-						<div className="flex flex-col gap-2">
-							<label
-								htmlFor="price"
-								className="text-sm font-medium text-gray-700"
-							>
-								Price
-							</label>
-							<div className="relative">
-								<span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">
-									$
-								</span>
-								<input
-									type="number"
-									id="price"
-									min="0"
-									step="0.01"
-									placeholder="0.00"
-									className="w-full pl-8 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+								<path
+									fillRule="evenodd"
+									d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+									clipRule="evenodd"
 								/>
-							</div>
-						</div>
-						<div className="flex items-end">
-							<button
-								type="button"
-								className="w-full text-white bg-[#0095FF] hover:bg-blue-600 px-4 py-2.5 rounded-lg transition-colors duration-200 flex items-center justify-center gap-2"
+							</svg>
+						) : (
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								className="h-5 w-5"
+								viewBox="0 0 20 20"
+								fill="currentColor"
 							>
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									className="h-5 w-5"
-									viewBox="0 0 20 20"
-									fill="currentColor"
-								>
-									<path
-										fillRule="evenodd"
-										d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
-										clipRule="evenodd"
-									/>
-								</svg>
-								Add Variant
-							</button>
-						</div>
+								<path
+									fillRule="evenodd"
+									d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+									clipRule="evenodd"
+								/>
+							</svg>
+						)}
+						<span>{Message.text}</span>
 					</div>
 				</div>
-
-				<div className="mt-6">
-					<label
-						htmlFor="productImages"
-						className="inline-flex items-center gap-2 px-4 py-2.5 text-white bg-[#0095FF] hover:bg-blue-600 rounded-lg transition-colors duration-200 cursor-pointer"
-					>
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							className="h-5 w-5"
-							viewBox="0 0 20 20"
-							fill="currentColor"
-						>
-							<path
-								fillRule="evenodd"
-								d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
-								clipRule="evenodd"
-							/>
-						</svg>
-						Upload Product Images
-					</label>
-					<input
-						type="file"
-						id="productImages"
-						className="hidden"
-						multiple
-						accept="image/*"
-					/>
-				</div>
-			</div>
-		</form>
+			)}
+		</>
 	);
 }
-
 function UploadImage() {
 	return (
 		<div className="flex flex-col w-full gap-5">

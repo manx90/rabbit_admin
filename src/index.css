@@ -144,7 +144,7 @@
 }
 
 .ContentPage {
-	@apply relative flex flex-col sm:ml-100 py-[40px] gap-[40px] px-[60px] bg-[#F9F9F9] h-screen overflow-y-auto;
+	@apply relative  flex flex-col sm:ml-100 py-[40px] gap-[40px] px-[60px] bg-[#F9F9F9] h-screen overflow-y-auto;
 }
 * {
 	@apply font-poppins;

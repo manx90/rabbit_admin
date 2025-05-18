@@ -1,60 +1,19 @@
-import {
-	useEffect,
-	useRef,
-	useState,
-} from "react";
-import axios from "axios";
+import { useProduct } from "../Contexts/ProductPageContext";
 
-export function MainCategory({
-	setCategory,
-	setMessage,
-	category,
-	URL,
-}) {
-	const [isLoading, setIsLoading] =
-		useState(false);
-	useEffect(() => {
-		function addCategory(category) {
-			if (category === null || category === "")
-				return null;
-			setIsLoading(true);
-			axios
-				.post(`${URL}/category`, {
-					category: category,
-				})
-				.then((res) => {
-					setIsLoading(false);
-					setMessage({
-						type: "success",
-						text:
-							res.data.message ||
-							"Category added successfully!",
-					});
-				})
-				.catch((error) => {
-					setIsLoading(false);
-					setMessage({
-						type: "error",
-						text:
-							error.response?.data?.message ||
-							error.message,
-					});
-				});
-		}
-		if (category !== "") addCategory(category);
-		return () => {
-			setMessage("");
-		};
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [category]);
-	const mainCategory = useRef("");
-	if (isLoading) {
+export function MainCategory() {
+	const {
+		isLoading1,
+		mainCategory,
+		setCategory,
+	} = useProduct();
+	if (isLoading1) {
 		return (
 			<div className="flex items-center justify-center  bg-gray-50">
 				<div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-500"></div>
 			</div>
 		);
 	}
+
 	return (
 		<div className="w-full bg-white rounded-2xl p-[12px] border">
 			<div className="flex flex-row  justify-between gap-10 w-full">

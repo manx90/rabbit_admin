@@ -1,74 +1,13 @@
-import {
-	useEffect,
-	useRef,
-	useState,
-} from "react";
-import axios from "axios";
-``;
-export function SubCategory({
-	mainCategoryProduct,
-	setMainCategoryProduct,
-	setMessage,
-	Message,
-}) {
-	const [isLoading, setIsLoading] =
-		useState(false);
-	const URL = "http://localhost:3003";
-	const Category = useRef("");
-	const [AddSub, setAddSub] = useState(false);
-	const SubCategory = useRef("");
-	useEffect(() => {
-		function getCategory() {
-			axios
-				.get(`${URL}/category`)
-				.then((res) => {
-					setIsLoading(false);
-					setMainCategoryProduct(res.data);
-				})
-				.catch(() => {
-					setIsLoading(false);
-				});
-		}
-		getCategory();
-	}, [
-		setMessage,
-		Message,
-		setMainCategoryProduct,
-	]);
-	useEffect(() => {
-		function addSubCategory() {
-			axios
-				.post(`${URL}/category/subcategory`, {
-					categoryId: Category.current.value,
-					name: SubCategory.current.value,
-				})
-				.then((res) => {
-					setIsLoading(false);
-					setMessage({
-						type: "success",
-						text:
-							res.data.message ||
-							"SubCategory added successfully!",
-					});
-				})
-				.catch((error) => {
-					setIsLoading(false);
-					setMessage({
-						type: "error",
-						text:
-							error.response?.data?.message ||
-							error.message,
-					});
-				});
-		}
-		if (AddSub === false) return;
-		if (AddSub === true) addSubCategory();
-		return () => {
-			setAddSub(false);
-			console.log("hi");
-		};
-	}, [AddSub, setAddSub, setMessage]);
-	if (isLoading) {
+import { useProduct } from "../Contexts/ProductPageContext";
+export function SubCategory() {
+	const {
+		isLoading2,
+		SubCategory,
+		mainCategoryProduct,
+		Category,
+		setAddSub,
+	} = useProduct();
+	if (isLoading2) {
 		return (
 			<div className="flex items-center justify-center  bg-gray-50">
 				<div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-500"></div>
@@ -118,16 +57,19 @@ export function SubCategory({
 								type="text"
 								id="SubCategory"
 								name="SubCategory"
-								className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+								className="w-full px-4 py-2.5 border border-gray-300 rounded-lg fucos:ring-none active:outline-none bg-white text-gray-700"
 								placeholder="Enter Sub Category"
 								ref={SubCategory}
+								onBlur={(e) => e.target.blur()}
 							/>
 						</div>
 					</div>
 					<button
 						// type="submit"
-						className={`text-white bg-[#0095FF] hover:bg-blue-600 px-6 py-2.5 rounded-lg self-end transition-colors duration-200 flex items-center justify-center gap-2 min-w-[200px]`}
-						onClick={() => setAddSub(true)}
+						className={`cursor-pointer text-white bg-[#0095FF] hover:bg-blue-600 px-6 py-2.5 rounded-lg self-end transition-colors duration-200 flex items-center justify-center gap-2 min-w-[200px]`}
+						onClick={() => {
+							setAddSub(true);
+						}}
 					>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
