@@ -1,4 +1,4 @@
-import { useProduct } from "../Contexts/ProductPageContext";
+import { useProduct } from "../Contexts/Category";
 
 export function MainCategory() {
 	const {

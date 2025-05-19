@@ -1,7 +1,8 @@
 import { useState } from "react";
+import { Form } from "react-router";
 
 export function Products() {
-	const style = {
+	const styleProduct = {
 		level1:
 			"bg-white rounded-2xl p-6 border shadow-sm hover:shadow-md transition-shadow duration-200",
 		level2_1: "flex flex-col lg:flex-row gap-6",
@@ -28,50 +29,80 @@ export function Products() {
 	]);
 	return (
 		<div>
-			<div className={style.level1}>
-				<InfoProduct style={style} />
+			<div className={styleProduct.level1}>
+				<InfoProduct
+					styleProduct={styleProduct}
+				/>
 				<UploadImageColors
 					colorInputs={colorInputs}
 					setColorInputs={setColorInputs}
-					style={style}
+					styleProduct={styleProduct}
 				/>
 				<ColorWithSizes
 					colorInputs={colorInputs}
-					style={style}
+					styleProduct={styleProduct}
 				/>
 			</div>
 		</div>
 	);
 }
 
-function InfoProduct({ style }) {
+function InfoProduct({ styleProduct }) {
+	const [FormInfo, setFormInfo] = useState({
+		name: "",
+		category: "",
+		description: "",
+	});
+	const handleInfoChange = (field, value) => {
+		setFormInfo((prev) => ({
+			...prev,
+			[field]: value,
+		}));
+	};
+
 	return (
-		<div className={style.level2_1}>
-			<div className={style.level3_1}>
-				<div className={style.level4}>
+		<div className={styleProduct.level2_1}>
+			<div className={styleProduct.level3_1}>
+				<div className={styleProduct.level4}>
 					<label
 						htmlFor="productName"
-						className={style.label}
+						className={styleProduct.label}
 					>
 						Name
 					</label>
 					<input
 						type="text"
 						id="productName"
-						className={style.input_1}
+						name="name"
+						className={styleProduct.input_1}
 						placeholder="Enter product name"
+						onChange={(e) =>
+							handleInfoChange(
+								e.target.name,
+								e.target.value,
+							)
+						}
+						required
 					/>
 				</div>
-				<div className={style.level4}>
+				<div className={styleProduct.level4}>
 					<label
 						htmlFor="category"
-						className={style.label}
+						className={styleProduct.label}
 					>
 						Category
 					</label>
 					<select
 						id="category"
-						className={style.select}
+						className={styleProduct.select}
+						name="category"
+						onChange={(e) =>
+							handleInfoChange(
+								e.target.name,
+								e.target.value,
+							)
+						}
+						required
 					>
 						<option value="">
 							Select Category
@@ -84,7 +115,7 @@ function InfoProduct({ style }) {
 						</option>
 					</select>
 				</div>
-				<div className={style.level4}>
+				<div className={styleProduct.level4}>
 					<label
 						htmlFor="subCategory"
 						className="text-sm font-medium text-gray-700"
@@ -92,8 +123,16 @@ function InfoProduct({ style }) {
 						Sub Category
 					</label>
 					<select
+						required
+						onChange={(e) => {
+							handleInfoChange(
+								e.target.name,
+								e.target.value,
+							);
+						}}
 						id="subCategory"
 						className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 bg-white text-gray-700"
+						name="subCategory"
 					>
 						<option value="">
 							Select Sub Category
@@ -106,7 +145,7 @@ function InfoProduct({ style }) {
 					</select>
 				</div>
 			</div>
-			<div className={style.Description}>
+			<div className={styleProduct.Description}>
 				<label
 					htmlFor="description"
 					className="text-sm font-medium text-gray-700"
@@ -114,17 +153,28 @@ function InfoProduct({ style }) {
 					Description
 				</label>
 				<textarea
+					required
 					id="description"
+					name="description"
 					rows="8"
-					className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 resize-none"
+					className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 resize-none focus:outline-none"
 					placeholder="Enter product description"
+					onChange={(e) =>
+						handleInfoChange(
+							e.target.name,
+							e.target.value,
+						)
+					}
 				/>
 			</div>
 		</div>
 	);
 }
 
-function ColorWithSizes({ style, colorInputs }) {
+function ColorWithSizes({
+	styleProduct,
+	colorInputs,
+}) {
 	const [variants, setVariants] = useState([
 		{
 			size: "",
@@ -199,7 +249,7 @@ function ColorWithSizes({ style, colorInputs }) {
 		setVariants(updated);
 	};
 	return (
-		<div className={style.level2_2}>
+		<div className={styleProduct.level2_2}>
 			{variants.map((variant, variantIndex) => (
 				<div
 					key={variantIndex}
@@ -214,10 +264,10 @@ function ColorWithSizes({ style, colorInputs }) {
 						remove
 					</button>
 					{/* Size input */}
-					<div className={style.level4}>
+					<div className={styleProduct.level4}>
 						<label
 							htmlFor={`size-${variantIndex}`}
-							className={style.label_1}
+							className={styleProduct.label_1}
 						>
 							Size
 						</label>
@@ -225,7 +275,7 @@ function ColorWithSizes({ style, colorInputs }) {
 							type="text"
 							id={`size-${variantIndex}`}
 							placeholder="Enter size"
-							className={style.input_1}
+							className={styleProduct.input_1}
 							value={variant.size}
 							onChange={(e) =>
 								handleVariantChange(
@@ -238,10 +288,10 @@ function ColorWithSizes({ style, colorInputs }) {
 					</div>
 
 					{/* Price input */}
-					<div className={style.level4}>
+					<div className={styleProduct.level4}>
 						<label
 							htmlFor={`price-${variantIndex}`}
-							className={style.label_1}
+							className={styleProduct.label_1}
 						>
 							Price
 						</label>
@@ -251,7 +301,7 @@ function ColorWithSizes({ style, colorInputs }) {
 							min="0"
 							step="0.01"
 							placeholder="0.00"
-							className={style.input_price}
+							className={styleProduct.input_price}
 							value={variant.price}
 							onChange={(e) =>
 								handleVariantChange(
@@ -265,7 +315,9 @@ function ColorWithSizes({ style, colorInputs }) {
 
 					{/* Colors and quantities */}
 					<div className="col-span-2">
-						<label className={style.label_1}>
+						<label
+							className={styleProduct.label_1}
+						>
 							Colors & Quantities
 						</label>
 						{variant.colorQuantities.map(
@@ -275,7 +327,9 @@ function ColorWithSizes({ style, colorInputs }) {
 									className="flex gap-2 mb-2"
 								>
 									<select
-										className={style.select}
+										className={
+											styleProduct.select
+										}
 										value={item.colorId}
 										onChange={(e) =>
 											handleColorChange(
@@ -302,7 +356,9 @@ function ColorWithSizes({ style, colorInputs }) {
 										type="number"
 										min="0"
 										placeholder="Quantity"
-										className={style.input_1}
+										className={
+											styleProduct.input_1
+										}
 										value={item.quantity}
 										onChange={(e) =>
 											handleColorChange(
@@ -336,7 +392,7 @@ function ColorWithSizes({ style, colorInputs }) {
 							onClick={() =>
 								addColorQuantity(variantIndex)
 							}
-							className={`${style.button} mt-2 hover:bg-blue-500 hover:text-white transition-all duration-500 ease-in-out  px-4 py-2 rounded-lg cursor-pointer`}
+							className={`${styleProduct.button} mt-2 hover:bg-blue-500 hover:text-white transition-all duration-500 ease-in-out  px-4 py-2 rounded-lg cursor-pointer`}
 						>
 							Add Color & Quantity
 						</button>
@@ -348,7 +404,7 @@ function ColorWithSizes({ style, colorInputs }) {
 			<div className="flex justify-start">
 				<button
 					type="button"
-					className={style.button}
+					className={styleProduct.button}
 					onClick={addVariant}
 				>
 					Add Variant (Size)
@@ -359,7 +415,7 @@ function ColorWithSizes({ style, colorInputs }) {
 }
 
 function UploadImageColors({
-	style,
+	styleProduct,
 	colorInputs,
 	setColorInputs,
 }) {
@@ -417,7 +473,7 @@ function UploadImageColors({
 	};
 
 	return (
-		<div className={style.level2_2}>
+		<div className={styleProduct.level2_2}>
 			{colorInputs.map((input, index) => (
 				<div
 					key={input.id}
@@ -456,7 +512,7 @@ function UploadImageColors({
 						) : (
 							<label
 								htmlFor={`productImage_${input.id}`}
-								className={`${style.label_productImage} cursor-pointer flex flex-col items-center justify-center w-28 h-14 border-2  border-gray-300 rounded-lg`}
+								className={`${styleProduct.label_productImage} cursor-pointer flex flex-col items-center justify-center w-28 h-14 border-2  border-gray-300 rounded-lg`}
 							>
 								<span className="text-sm text-gray-500 text-center">
 									Upload Image
