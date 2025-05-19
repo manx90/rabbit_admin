@@ -7,6 +7,7 @@ import {
 	ProductProvider,
 	useProduct,
 } from "../Contexts/Category";
+
 import { useState } from "react";
 export default function Product() {
 	return (

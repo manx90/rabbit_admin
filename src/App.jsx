@@ -68,7 +68,7 @@ export default function App() {
 							}
 						/>
 						<Route
-							path="/products"
+							path="/product"
 							element={
 								<ProtectedRoute>
 									<Product />
