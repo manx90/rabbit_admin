@@ -7,6 +7,7 @@ import {
 	ProductProvider,
 	useProduct,
 } from "../Contexts/ProductPageContext";
+import { useState } from "react";
 export default function Product() {
 	return (
 		<ProductProvider>
@@ -99,20 +100,63 @@ function Message() {
 	);
 }
 function UploadImage() {
+	const [ImgCover, setImgCover] = useState(null);
+	const [Imgs, setImgs] = useState([]);
+	const [ImgMeasur, setImgMeasur] =
+		useState(null);
+	const [ImgChart, setImgChart] = useState(null);
 	return (
 		<div className="flex flex-col w-full gap-5">
-			<div className="flex flex-row  gap-2 w-full">
+			<div className="flex flex-row gap-2 w-full">
 				<label htmlFor="ImageCover">
-					<img src="ImageCover.svg" alt="" />
+					{ImgCover ? (
+						<img
+							src={URL.createObjectURL(ImgCover)}
+							alt=""
+							className="w-[305px] h-[305px] object-contain rounded-2xl"
+						/>
+					) : (
+						<img src="ImageCover.svg" alt="" />
+					)}
 				</label>
 				<input
 					type="file"
 					className="hidden"
 					id="ImageCover"
 					name="ImageCover"
+					onChange={(e) =>
+						setImgCover(e.target.files[0])
+					}
 				/>
+
 				<label htmlFor="AllImages">
-					<img src="AllImages.svg" alt="" />
+					{Imgs.length > 0 ? (
+						<div className="flex flex-row flex-wrap">
+							{Imgs.map((img, index) => (
+								<div className="relative">
+									<img
+										src={URL.createObjectURL(img)}
+										alt=""
+										className="w-[200px] h-[200px] object-contain rounded-2xl"
+									/>
+									<button
+										onClick={() =>
+											setImgs(
+												Imgs.filter(
+													(_, i) => i !== index,
+												),
+											)
+										}
+										className="absolute top-5 right-0 z-10 p-2 bg-red-100 text-red-700 border border-red-200 transition duration-300 ease-in-out rounded-2xl cursor-pointer hover:bg-red-200 hover:text-red-800"
+									>
+										remove
+									</button>
+								</div>
+							))}
+						</div>
+					) : (
+						<img src="AllImages.svg" alt="" />
+					)}
 				</label>
 				<input
 					type="file"
@@ -120,34 +164,64 @@ function UploadImage() {
 					id="AllImages"
 					name="AllImages"
 					multiple
+					onChange={(e) =>
+						setImgs(Array.from(e.target.files))
+					}
 				/>
 			</div>
-			{/* <div className="flex flex-row  gap-2 w-full">
-				<label htmlFor="" for="Image Cover">
-					<img
-						src="ImageMeasurements.svg"
-						alt=""
-					/>
+			<div className="flex flex-row  gap-2 w-full">
+				<label
+					htmlFor="ImageMeasurements"
+					for="ImageMeasurements"
+				>
+					{ImgMeasur ? (
+						<img
+							src={URL.createObjectURL(ImgMeasur)}
+							alt=""
+						/>
+					) : (
+						<img
+							src="ImageMeasurements.svg"
+							alt=""
+						/>
+					)}
 				</label>
 				<input
 					type="file"
 					className="hidden"
 					id="ImageMeasurements"
 					name="ImageMeasurements"
+					onChange={(e) =>
+						setImgMeasur(e.target.files[0])
+					}
 				/>
-				<label htmlFor="" for="All Images">
-					<img
-						src="ChartMeasurement.svg"
-						alt=""
-					/>
+				<label
+					htmlFor="ChartMeasurement"
+					for="ChartMeasurement"
+					className="w-1/2 object-contain rounded-2xl"
+				>
+					{ImgChart ? (
+						<img
+							src={URL.createObjectURL(ImgChart)}
+							alt=""
+						/>
+					) : (
+						<img
+							src="ChartMeasurement.svg"
+							alt=""
+						/>
+					)}
 				</label>
 				<input
 					type="file"
 					className="hidden"
 					id="ChartMeasurement"
-					name="ChartMeasurement"
+					name=""
+					onChange={(e) =>
+						setImgChart(e.target.files[0])
+					}
 				/>
-			</div> */}
+			</div>
 		</div>
 	);
 }
@@ -164,26 +238,6 @@ function SaveCancel() {
 		</div>
 	);
 }
-
-// function ProductList() {
-// 	return (
-// 		<div className="flex flex-col gap-2 w-full">
-// 			<div className="flex flex-row justify-between">
-// 				<button className="btn_Publish">
-// 					Published Products
-// 				</button>
-// 				<button className="btn_Publish">
-// 					Scheduled Products
-// 				</button>
-// 			</div>
-// 			<div className="flex flex-col">
-// 				<div className="flex flex-row">
-// 					<button>Name </button>
-// 				</div>
-// 			</div>
-// 		</div>
-// 	);
-// }
 
 function EditProd() {
 	return (
