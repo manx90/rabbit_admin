@@ -1,32 +1,16 @@
+import { useState } from "react";
+
 export function InfoProduct({
 	styleProduct,
-	setProductInfo,
+	MainCategoryProduct,
+	dispatchProductInfo,
+	ProductInfo,
 }) {
-	const handleInfoChange = (name, value) => {
-		setProductInfo((prevInfo) => {
-			// Check if the name already exists in the array
-			const existingIndex = prevInfo.findIndex(
-				(item) => item.name === name,
-			);
-			if (existingIndex !== -1) {
-				// If it exists, update the value
-				const updatedInfo = [...prevInfo];
-				updatedInfo[existingIndex] = {
-					name,
-					value,
-				};
-				return updatedInfo;
-			} else {
-				// If it doesn't exist, add it
-				const newInfo = [
-					...prevInfo,
-					{ name, value },
-				];
-				return newInfo;
-			}
-		});
+	const [Mainindex, setMainIndex] =
+		useState(Number);
+	const handleMainIndex = (index) => {
+		setMainIndex(index);
 	};
-
 	return (
 		<div className={styleProduct.level2_1}>
 			<div className={styleProduct.level3_1}>
@@ -40,77 +24,96 @@ export function InfoProduct({
 					<input
 						type="text"
 						id="productName"
-						name="name"
+						name="ProductName"
 						className={styleProduct.input_1}
 						placeholder="Enter product name"
-						onChange={(e) =>
-							handleInfoChange(
-								e.target.name,
-								e.target.value,
-							)
-						}
+						onChange={(e) => {
+							dispatchProductInfo({
+								type: "SET_PRODUCT_NAME",
+								payload: e.target.value,
+							});
+							console.log(ProductInfo);
+						}}
 						required
 					/>
 				</div>
-				<div className={styleProduct.level4}>
-					<label
-						htmlFor="category"
-						className={styleProduct.label}
-					>
-						Category
-					</label>
-					<select
-						id="category"
-						className={styleProduct.select}
-						name="category"
-						onChange={(e) =>
-							handleInfoChange(
-								e.target.name,
-								e.target.value,
-							)
-						}
-						required
-					>
-						<option value="">
-							Select Category
-						</option>
-						<option value="Men">Men</option>
-						<option value="Women">Women</option>
-						<option value="Kids">Kids</option>
-						<option value="Accessories">
-							Accessories
-						</option>
-					</select>
-				</div>
-				<div className={styleProduct.level4}>
-					<label
-						htmlFor="subCategory"
-						className="text-sm font-medium text-gray-700"
-					>
-						Sub Category
-					</label>
-					<select
-						required
-						onChange={(e) => {
-							handleInfoChange(
-								e.target.name,
-								e.target.value,
-							);
-						}}
-						id="subCategory"
-						className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 bg-white text-gray-700"
-						name="subCategory"
-					>
-						<option value="">
-							Select Sub Category
-						</option>
-						<option value="Shirt">Shirt</option>
-						<option value="Pants">Pants</option>
-						<option value="Dress">Dress</option>
-						<option value="Skirt">Skirt</option>
-						<option value="Jacket">Jacket</option>
-					</select>
-				</div>
+				{MainCategoryProduct && (
+					<>
+						<div className={styleProduct.level4}>
+							<label
+								htmlFor="category"
+								className={styleProduct.label}
+							>
+								Category
+							</label>
+							<select
+								id="category"
+								className={styleProduct.select}
+								name="categoryId"
+								onChange={(e) => {
+									dispatchProductInfo({
+										type: "SET_CATEGORY_ID",
+										payload: e.target.value,
+									});
+									handleMainIndex(
+										e.target.selectedIndex,
+									);
+								}}
+								required
+							>
+								{MainCategoryProduct.map(
+									(category, index) => (
+										<option
+											key={index}
+											value={category.id}
+										>
+											{category.category}
+										</option>
+									),
+								)}
+							</select>
+						</div>
+						<div className={styleProduct.level4}>
+							<label
+								htmlFor="subCategory"
+								className="text-sm font-medium text-gray-700"
+							>
+								Sub Category
+							</label>
+							<select
+								required
+								onChange={(e) => {
+									dispatchProductInfo({
+										type: "SET_SUBCATEGORY_ID",
+										payload: e.target.value,
+									});
+								}}
+								id="subCategory"
+								className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 bg-white text-gray-700"
+								name="subcategoryId"
+							>
+								{MainCategoryProduct &&
+									MainCategoryProduct[
+										Mainindex
+									] &&
+									MainCategoryProduct[Mainindex]
+										.subCategories &&
+									MainCategoryProduct[
+										Mainindex
+									].subCategories.map(
+										(subCategory) => (
+											<option
+												key={subCategory.id}
+												value={subCategory.id}
+											>
+												{subCategory.name}
+											</option>
+										),
+									)}
+							</select>
+						</div>
+					</>
+				)}
 			</div>
 			<div className={styleProduct.Description}>
 				<label
@@ -127,10 +130,10 @@ export function InfoProduct({
 					className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 resize-none focus:outline-none"
 					placeholder="Enter product description"
 					onChange={(e) =>
-						handleInfoChange(
-							e.target.name,
-							e.target.value,
-						)
+						dispatchProductInfo({
+							type: "SET_DESCRIPTION",
+							payload: e.target.value,
+						})
 					}
 				/>
 			</div>

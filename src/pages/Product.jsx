@@ -2,13 +2,13 @@ import Table from "../components/Table";
 import { HeaderProduct } from "../components/HeaderProduct";
 import { SubCategory } from "../components/SubCategory";
 import { MainCategory } from "../components/MainCategory";
-import { Products } from "../components/products";
+import { Products } from "../components/ProductPart";
 import {
 	ProductProvider,
 	useProduct,
-} from "../Contexts/Category";
+} from "../Contexts/Product.Context";
+import { useEffect } from "react";
 
-import { useState } from "react";
 export default function Product() {
 	return (
 		<ProductProvider>
@@ -53,6 +53,7 @@ export default function Product() {
 		</ProductProvider>
 	);
 }
+
 function Message() {
 	const { Message } = useProduct();
 	return (
@@ -100,63 +101,111 @@ function Message() {
 		</>
 	);
 }
+
 function UploadImage() {
-	const [ImgCover, setImgCover] = useState(null);
-	const [Imgs, setImgs] = useState([]);
-	const [ImgMeasur, setImgMeasur] =
-		useState(null);
-	const [ImgChart, setImgChart] = useState(null);
+	const {dispatchProductInfo, productInfo} = useProduct();
+
+	// Add useEffect to monitor state changes
+	useEffect(() => {
+		console.log('ProductInfo updated:', productInfo);
+	}, [productInfo]);
+
 	return (
 		<div className="flex flex-col w-full gap-5">
 			<div className="flex flex-row gap-2 w-full">
-				<label htmlFor="ImageCover">
-					{ImgCover ? (
-						<img
-							src={URL.createObjectURL(ImgCover)}
-							alt=""
-							className="w-[305px] h-[305px] object-contain rounded-2xl"
-						/>
-					) : (
-						<img src="ImageCover.svg" alt="" />
-					)}
-				</label>
-				<input
-					type="file"
-					className="hidden"
-					id="ImageCover"
-					name="ImageCover"
-					onChange={(e) =>
-						setImgCover(e.target.files[0])
-					}
-				/>
-
-				<label htmlFor="AllImages">
-					{Imgs.length > 0 ? (
-						<div className="flex flex-row flex-wrap">
-							{Imgs.map((img, index) => (
-								<div className="relative">
-									<img
-										src={URL.createObjectURL(img)}
-										alt=""
-										className="w-[200px] h-[200px] object-contain rounded-2xl"
+				<div className="flex flex-col items-center">
+					{productInfo.imgCover ? (
+						<div className="relative">
+							<img 
+								src={URL.createObjectURL(productInfo.imgCover)} 
+								alt="Cover" 
+								className="h-24 w-32 object-cover rounded-lg"
+							/>
+							<button
+								type="button"
+								onClick={() => {
+									dispatchProductInfo({
+										type: "SET_IMG_COVER",
+										payload: null
+									});
+								}}
+								className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-1"
+							>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									className="h-4 w-4"
+									viewBox="0 0 20 20"
+									fill="currentColor"
+								>
+									<path
+										fillRule="evenodd"
+										d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+										clipRule="evenodd"
 									/>
-									<button
-										onClick={() =>
-											setImgs(
-												Imgs.filter(
-													(_, i) => i !== index,
-												),
-											)
-										}
-										className="absolute top-5 right-0 z-10 p-2 bg-red-100 text-red-700 border border-red-200 transition duration-300 ease-in-out rounded-2xl cursor-pointer hover:bg-red-200 hover:text-red-800"
-									>
-										remove
-									</button>
-								</div>
+								</svg>
+							</button>
+						</div>
+					) : (
+						<label htmlFor="ImageCover" className="cursor-pointer">
+							<img src="ImageCover.svg" alt="" />
+						</label>
+					)}
+					<input
+						type="file"
+						className="hidden"
+						id="ImageCover"
+						name="ImageCover"
+						accept="image/*"
+						onChange={(e) => {
+							dispatchProductInfo({
+								type: "SET_IMG_COVER",
+								payload: e.target.files[0]
+							});
+						}}
+					/>
+				</div>
+				<label htmlFor="AllImages" className="cursor-pointer">
+					{productInfo.imgs && productInfo.imgs.length > 0 ? (
+						<div className="flex flex-wrap gap-2">
+							{productInfo.imgs.map((img, index) => (
+								img instanceof File && (
+									<div key={index} className="relative">
+										<img 
+											src={URL.createObjectURL(img)} 
+											alt={`Uploaded ${index + 1}`}
+											className="h-24 w-32 object-cover rounded-lg"
+										/>
+										<button
+											type="button"
+											onClick={() => {
+												const newImgs = [...productInfo.imgs];
+												newImgs.splice(index, 1);
+												dispatchProductInfo({
+													type: "SET_IMGS",
+													payload: newImgs
+												});
+											}}
+											className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-1"
+										>
+											<svg
+												xmlns="http://www.w3.org/2000/svg"
+												className="h-4 w-4"
+												viewBox="0 0 20 20"
+												fill="currentColor"
+											>
+												<path
+													fillRule="evenodd"
+													d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+													clipRule="evenodd"
+												/>
+											</svg>
+										</button>
+									</div>
+								)
 							))}
 						</div>
 					) : (
-						<img src="AllImages.svg" alt="" />
+						<img src="AllImages.svg" alt="Upload images" />
 					)}
 				</label>
 				<input
@@ -165,62 +214,124 @@ function UploadImage() {
 					id="AllImages"
 					name="AllImages"
 					multiple
-					onChange={(e) =>
-						setImgs(Array.from(e.target.files))
-					}
+					accept="image/*"
+					onChange={(e) => {
+						if (e.target.files && e.target.files.length > 0) {
+							const files = Array.from(e.target.files);
+							dispatchProductInfo({
+								type: "SET_IMGS",
+								payload: files
+							});
+						}
+					}}
 				/>
 			</div>
 			<div className="flex flex-row  gap-2 w-full">
-				<label
-					htmlFor="ImageMeasurements"
-					for="ImageMeasurements"
-				>
-					{ImgMeasur ? (
-						<img
-							src={URL.createObjectURL(ImgMeasur)}
-							alt=""
-						/>
+			{productInfo.imgMeasurment ? (
+						<div className="relative">
+							<img 
+								src={URL.createObjectURL(productInfo.imgMeasurment)} 
+								alt="Cover" 
+								className="h-24 w-32 object-cover rounded-lg"
+							/>
+							<button
+								type="button"
+								onClick={() => {
+									dispatchProductInfo({
+										type: "SET_IMG_MEASUREMENT",
+										payload: null
+									});
+								}}
+								className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-1"
+							>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									className="h-4 w-4"
+									viewBox="0 0 20 20"
+									fill="currentColor"
+								>
+									<path
+										fillRule="evenodd"
+										d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+										clipRule="evenodd"
+									/>
+								</svg>
+							</button>
+						</div>
 					) : (
+						<label htmlFor="ImageMeasurements" className="cursor-pointer object-contain rounded-2xl">
 						<img
+						className="w-[305px] h-[305px]"
 							src="ImageMeasurements.svg"
 							alt=""
 						/>
-					)}
 				</label>
+					)}
+				
 				<input
 					type="file"
 					className="hidden"
 					id="ImageMeasurements"
 					name="ImageMeasurements"
-					onChange={(e) =>
-						setImgMeasur(e.target.files[0])
-					}
+					onChange={(e)=>{
+						dispatchProductInfo({
+							type:"SET_IMG_MEASUREMENT",
+							payload:e.target.files[0]
+						})
+					}}
 				/>
-				<label
-					htmlFor="ChartMeasurement"
-					for="ChartMeasurement"
-					className="w-1/2 object-contain rounded-2xl"
-				>
-					{ImgChart ? (
-						<img
-							src={URL.createObjectURL(ImgChart)}
-							alt=""
-						/>
+				{productInfo.imgChart ? (
+						<div className="relative">
+							<img 
+								src={URL.createObjectURL(productInfo.imgChart)} 
+								alt="Cover" 
+								className="h-24 w-32 object-cover rounded-lg"
+							/>
+							<button
+								type="button"
+								onClick={() => {
+									dispatchProductInfo({
+										type: "SET_IMG_CHART",
+										payload: null
+									});
+								}}
+								className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-1"
+							>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									className="h-4 w-4"
+									viewBox="0 0 20 20"
+									fill="currentColor"
+								>
+									<path
+										fillRule="evenodd"
+										d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+										clipRule="evenodd"
+									/>
+								</svg>
+							</button>
+						</div>
 					) : (
+						<label
+					htmlFor="ChartMeasurement"
+					className="object-contain rounded-2xl cursor-pointer"
+				>
 						<img
 							src="ChartMeasurement.svg"
 							alt=""
 						/>
+				</label> 
 					)}
-				</label>
 				<input
 					type="file"
 					className="hidden"
 					id="ChartMeasurement"
-					name=""
-					onChange={(e) =>
-						setImgChart(e.target.files[0])
-					}
+					onChange={(e)=>{
+						dispatchProductInfo({
+							type:"SET_IMG_CHART",
+							payload:e.target.files[0]
+						})
+					}}
 				/>
 			</div>
 		</div>
@@ -228,12 +339,15 @@ function UploadImage() {
 }
 
 function SaveCancel() {
+	const {productInfo} =useProduct();
 	return (
 		<div className="flex self-end gap-5">
 			<button className="text-white hover:scale-105  bg-red-600 px-5 rounded-lg max-w-[8em] h-full py-3.5  self-end">
 				Cancel
 			</button>
-			<button className="text-white  bg-[#0095FF] px-5 rounded-lg max-w-[8em] h-full py-3.5  self-end hover:scale-105">
+			<button className="text-white  bg-[#0095FF] px-5 rounded-lg max-w-[8em] h-full py-3.5  self-end hover:scale-105" onClick={()=>
+				console.log(productInfo)
+			}>
 				Save
 			</button>
 		</div>

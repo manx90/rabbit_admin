@@ -1,11 +1,11 @@
-import { useProduct } from "../Contexts/Category";
+import { useProduct } from "../Contexts/Product.Context";
 export function SubCategory() {
 	const {
 		isLoading2,
-		SubCategory,
 		mainCategoryProduct,
-		Category,
 		setAddSub,
+		setSubCategory,
+		setMainCategory,
 	} = useProduct();
 	if (isLoading2) {
 		return (
@@ -31,7 +31,10 @@ export function SubCategory() {
 								name="MainSelect"
 								className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 bg-white text-gray-700"
 								placeholder="Select Main Category"
-								ref={Category}
+								onChange={(e) => {
+									setMainCategory(e.target.value);
+									console.log(e.target.value);
+								}}
 							>
 								{mainCategoryProduct &&
 									mainCategoryProduct.map(
@@ -59,8 +62,10 @@ export function SubCategory() {
 								name="SubCategory"
 								className="w-full px-4 py-2.5 border border-gray-300 rounded-lg fucos:ring-none active:outline-none bg-white text-gray-700"
 								placeholder="Enter Sub Category"
-								ref={SubCategory}
 								onBlur={(e) => e.target.blur()}
+								onChange={(e) =>
+									setSubCategory(e.target.value)
+								}
 							/>
 						</div>
 					</div>

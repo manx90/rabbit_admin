@@ -1,9 +1,10 @@
-import { useProduct } from "../Contexts/Category";
+import { useProduct } from "../Contexts/Product.Context";
 
 export function MainCategory() {
 	const {
 		isLoading1,
 		mainCategory,
+		setMainCategory,
 		setCategory,
 	} = useProduct();
 	if (isLoading1) {
@@ -30,13 +31,16 @@ export function MainCategory() {
 						name="MainCategory"
 						className="Inputs"
 						placeholder="MainCategory"
-						ref={mainCategory}
+						onChange={(e) =>
+							setMainCategory(e.target.value)
+						}
+						required
 					/>
 				</div>
 				<button
 					onClick={() => {
 						setCategory(
-							mainCategory.current.value,
+							mainCategory
 						);
 					}}
 					className="text-white w-64 bg-[#0095FF] px-4 py-[12px] rounded-lg self-end cursor-pointer animate-slideUp"
