@@ -7,7 +7,7 @@ export default function Dashboard() {
 	return (
 		<div className="ContentPage">
 			<HeaderDashboard />
-			<div className="grid grid-cols-2 gap-5">
+			<div className="grid md:grid-cols-2 sm:grid-cols-1 gap-5">
 				<ComponentChart
 					Title={"Total Orders"}
 					Count={"256.582"}
@@ -20,7 +20,7 @@ export default function Dashboard() {
 					IconPrice={true}
 				/>
 			</div>
-			<div className="flex flex-row flex-wrap gap-5 justify-between">
+			<div className="flex flex-wrap justify-between gap-2">
 				<MostBox
 					title={"Most Popular Items"}
 					count={"320,000"}
@@ -49,10 +49,12 @@ export default function Dashboard() {
 
 function HeaderDashboard() {
 	return (
-		<div className="flex justify-between">
-			<span className="text-[32px] text-[#535353] font-medium">
-				Statistics
-			</span>
+		<div className="flex justify-between items-center">
+			<div className="flex items-center gap-3">
+				<span className="text-[32px] text-[#535353] font-medium">
+					Statistics
+				</span>
+			</div>
 			<select
 				name="peroid"
 				id=""
@@ -82,10 +84,10 @@ function MostFrequent() {
 					View all
 				</button>
 			</div>
-			<div className="grid grid-cols-2 gap-5 mt-5">
+			<div className="grid md:grid-cols-2 sm:grid-cols-1 gap-5 mt-5">
 				<div className="flex flex-row gap-2 bg-[#F5F5F5] p-4 rounded-2xl">
 					<img src="1.png" alt="" />
-					<div className="flex flex-col flex-1">
+					<div className="flex flex-col flex-1 ">
 						<span>Hoodie</span>
 						<span>#2134559</span>
 					</div>
@@ -96,7 +98,7 @@ function MostFrequent() {
 				</div>
 				<div className="flex flex-row gap-2 bg-[#F5F5F5] p-4 rounded-2xl">
 					<img src="1.png" alt="" />
-					<div className="flex flex-col flex-1">
+					<div className="flex flex-col flex-1 text-sm md:text-base lg:text-lg">
 						<span>Hoodie</span>
 						<span>#2134559</span>
 					</div>
@@ -107,7 +109,7 @@ function MostFrequent() {
 				</div>
 				<div className="flex flex-row gap-2 bg-[#F5F5F5] p-4 rounded-2xl">
 					<img src="1.png" alt="" />
-					<div className="flex flex-col flex-1">
+					<div className="flex flex-col flex-1 text-sm md:text-base lg:text-lg	">
 						<span>Hoodie</span>
 						<span>#2134559</span>
 					</div>

@@ -25,9 +25,10 @@ export default function Table() {
 				setLoading(true);
 				const response = await fetch('http://localhost:3003/product');
 				if (!response.ok) {
-					throw new Error('Network response was not ok');
+					throw new Error('Failed to fetch products');
 				}
 				const data = await response.json();
+				// console.log('Raw product data:', data); // Debug log for raw data
 				setData(data);
 			} catch (error) {
 				console.error('Error fetching product data:', error);
@@ -55,26 +56,42 @@ export default function Table() {
 			header: "Description",
 			cell: (info) => info.getValue(),
 		}),
-		columnHelper.accessor("quantity", {
-			header: "Quantity",
-			cell: (info) => info.getValue(),
+		columnHelper.accessor("priceCover", {
+			header: "Price",
+			cell: (info) => `$${info.getValue()}`,
 			enableSorting: true,
 		}),
-		columnHelper.accessor("Sales", {
-			header: "Sales",
-			cell: (info) => info.getValue(),
+		columnHelper.accessor("category", {
+			header: "Category",
+			cell: (info) => {
+				const category = info.getValue();
+				// console.log('Category object:', category); // Debug log for category object
+				return category?.category || 'N/A';
+			},
+			enableSorting: true,
+		}),
+		columnHelper.accessor("subCategory", {
+			header: "Sub Category",
+			cell: (info) => {
+				const subCategory = info.getValue();
+				// console.log('SubCategory object:', subCategory); // Debug log for subcategory object
+				return subCategory?.name || 'N/A';
+			},
 			enableSorting: true,
 		}),
 		columnHelper.accessor("isActive", {
 			header: "Status",
-			cell: (info) => (
-				<span className={`px-2 py-1 rounded-full text-sm ${
-					info.getValue() ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-				}`}>
-					{info.getValue() ? 'Active' : 'Inactive'}
-				</span>
-			),
-			enableSorting: true,
+			cell: (info) => {
+				console.log(info.getValue());
+				return (
+					<span className={`px-2 py-1 rounded-full text-sm ${
+						info.getValue() ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+					}`}>
+						{info.getValue() ? 'true' : 'false'}
+					</span>
+				);
+			},
+			enableSorting: true,	
 		}),
 	];
 
@@ -123,8 +140,19 @@ export default function Table() {
 		return (
 			<div className="flex items-center justify-center min-h-[400px]">
 				<div className="text-red-500 text-center">
-					<p className="text-xl font-semibold">Error loading data</p>
+					<p className="text-xl font-semibold">Error loading products</p>
 					<p className="text-sm">{error}</p>
+				</div>
+			</div>
+		);
+	}
+
+	if (!data || data.length === 0) {
+		return (
+			<div className="flex items-center justify-center min-h-[400px]">
+				<div className="text-gray-500 text-center">
+					<p className="text-xl font-semibold">No products found</p>
+					<p className="text-sm">Add some products to see them here</p>
 				</div>
 			</div>
 		);
@@ -139,7 +167,7 @@ export default function Table() {
 						value={globalFilter ?? ""}
 						onChange={(e) => setGlobalFilter(e.target.value)}
 						className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-						placeholder="Search all columns..."
+						placeholder="Search products..."
 					/>
 				</div>
 				<div className="flex gap-2">

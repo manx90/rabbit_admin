@@ -1,3 +1,5 @@
+import { Button } from "./ui/button";
+
 export function ColorWithSizes({
 	styleProduct,
 	dispatchProductInfo,
@@ -20,7 +22,7 @@ export function ColorWithSizes({
 									}
 								});
 							}}
-							className="absolute top-2 right-2 px-2 cursor-pointer bg-amber-50 rounded-lg text-red-500 hover:text-red-600 transition duration-200 ease-in-out"
+							className="absolute top-2 right-2 px-2 cursor-pointer bg-red-500 rounded-lg text-white hover:bg-red-600 transition duration-200 ease-in-out"
 						>
 							remove
 						</button>
@@ -173,6 +175,10 @@ export function ColorWithSizes({
 								onClick={() => {
 									dispatchProductInfo({
 										type: "ADD_ANOTHER_COLOR_QUANTITY",
+										payload: {
+											variantIndex: variantIndex,
+											colorIndex: variant.ColorQuantity.length,
+										}
 									});
 								}}
 								className={`${styleProduct.button} mt-2 hover:bg-blue-500 hover:text-white transition-all duration-500 ease-in-out  px-4 py-2 rounded-lg cursor-pointer`}
@@ -186,17 +192,12 @@ export function ColorWithSizes({
 
 			{/* Add new size variant */}
 			<div className="flex justify-start">
-				<button
-					type="button"
-					className={`${styleProduct.button} cursor-pointer`}
-					onClick={() => {
-						dispatchProductInfo({
-							type: "ADD_SIZE_VARIANT"
-						});
-					}}
-				>
-					Add Variant (Size)
-				</button>
+			<Button onClick={() => {
+				dispatchProductInfo({
+					type: "ADD_SIZE_VARIANT"
+				});
+			}}>Add Variant (Size)</Button>
+
 			</div>
 		</div>
 	);

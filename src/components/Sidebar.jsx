@@ -1,160 +1,88 @@
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { LayoutDashboard } from "lucide-react";
+import { Shirt } from "lucide-react";
+import { Package } from "lucide-react";
+import { Megaphone } from "lucide-react";
+import { Link } from "react-router-dom";
+import SidebarToggle from "./SidebarToggle";
 
-export default function Sidebar() {
-	const location = useLocation();
-
-	const menuItems = [
-		{
-			title: "Dashboard",
-			icon: (
-				<svg
-					className="w-6 h-6"
-					fill="none"
-					stroke="currentColor"
-					viewBox="0 0 24 24"
-				>
-					<path
-						strokeLinecap="round"
-						strokeLinejoin="round"
-						strokeWidth={2}
-						d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
-					/>
-				</svg>
-			),
-			path: "/dashboard",
-		},
-		{
-			title: "Products",
-			icon: (
-				<svg
-					className="w-6 h-6"
-					fill="none"
-					stroke="currentColor"
-					viewBox="0 0 24 24"
-				>
-					<path
-						strokeLinecap="round"
-						strokeLinejoin="round"
-						strokeWidth={2}
-						d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
-					/>
-				</svg>
-			),
-			path: "/products",
-		},
-		{
-			title: "Orders",
-			icon: (
-				<svg
-					className="w-6 h-6"
-					fill="none"
-					stroke="currentColor"
-					viewBox="0 0 24 24"
-				>
-					<path
-						strokeLinecap="round"
-						strokeLinejoin="round"
-						strokeWidth={2}
-						d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
-					/>
-				</svg>
-			),
-			path: "/orders",
-		},
-		{
-			title: "Customers",
-			icon: (
-				<svg
-					className="w-6 h-6"
-					fill="none"
-					stroke="currentColor"
-					viewBox="0 0 24 24"
-				>
-					<path
-						strokeLinecap="round"
-						strokeLinejoin="round"
-						strokeWidth={2}
-						d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
-					/>
-				</svg>
-			),
-			path: "/customers",
-		},
-		{
-			title: "Settings",
-			icon: (
-				<svg
-					className="w-6 h-6"
-					fill="none"
-					stroke="currentColor"
-					viewBox="0 0 24 24"
-				>
-					<path
-						strokeLinecap="round"
-						strokeLinejoin="round"
-						strokeWidth={2}
-						d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-					/>
-					<path
-						strokeLinecap="round"
-						strokeLinejoin="round"
-						strokeWidth={2}
-						d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-					/>
-				</svg>
-			),
-			path: "/settings",
-		},
-	];
-
-	return (
-		<div className="h-screen w-64 bg-white shadow-lg">
-			{/* Logo */}
-			<div className="p-4 border-b">
-				<div className="flex items-center justify-center">
-					<img src="/logo.png" alt="Logo" className="w-32" />
-				</div>
-			</div>
-
-			{/* Menu Items */}
-			<nav className="mt-6">
-				{menuItems.map((item) => (
-					<Link
-						key={item.path}
-						to={item.path}
-						className={`flex items-center px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-200 ${
-							location.pathname === item.path
-								? "bg-blue-50 text-blue-600 border-r-4 border-blue-600"
-								: ""
-						}`}
-					>
-						<div className="flex items-center">
-							{item.icon}
-							<span className="ml-3 text-sm font-medium">
-								{item.title}
-							</span>
-						</div>
-					</Link>
-				))}
-			</nav>
-
-			{/* User Profile */}
-			<div className="absolute bottom-0 w-full p-4 border-t">
-				<div className="flex items-center">
-					<img
-						src="/avatar.png"
-						alt="User"
-						className="w-8 h-8 rounded-full"
-					/>
-					<div className="ml-3">
-						<p className="text-sm font-medium text-gray-700">
-							John Doe
-						</p>
-						<p className="text-xs text-gray-500">Admin</p>
-					</div>
-				</div>
-			</div>
-		</div>
-	);
+export default function Sidebar({ open, setOpen }) {
+  return (
+    <div
+      id="sidebar"
+      className={`fixed flex w-100 top-0 left-0 items-center overflow-hidden flex-col h-screen bg-black shadow-xl z-[100] 
+				transform transition-transform duration-300 ease-linear ${open ? "translate-x-0" : "-translate-x-full"}`}
+    >
+      <div className="flex w-full px-4 md:px-[60px] justify-between items-center">
+        <img
+          src="logo-white.png"
+          alt="logo"
+          className="w-[100%] mx-auto my-[20px] "
+        />
+        <div className="justify-center my-[20px]">
+          <SidebarToggle
+            open={open}
+            setOpen={setOpen}
+            className="text-white hover:text-blue-400"
+          />
+        </div>
+      </div>
+      <div className="flex flex-col gap-4 w-full px-4 md:px-10 border-b-2 border-[#363030] pb-[20px]">
+        <Link
+          to="/dashboard"
+          className={
+            window.location.pathname === "/dashboard" ||
+            window.location.pathname === "/"
+              ? "Sidebar-Button bg-[#363030]"
+              : "Sidebar-Button"
+          }
+          onClick={() => setOpen(false)}
+        >
+          <span className="flex gap-4 cursor-pointer">
+            <LayoutDashboard /> Dashboard
+          </span>
+        </Link>
+        <Link
+          to="/product"
+          className={
+            window.location.pathname === "/product"
+              ? "Sidebar-Button bg-[#363030]"
+              : "Sidebar-Button"
+          }
+          onClick={() => setOpen(false)}
+        >
+          <span className="flex gap-4 cursor-pointer">
+            <Shirt /> Product
+          </span>
+        </Link>
+        <Link
+          to="/order"
+          className={
+            window.location.pathname === "/order"
+              ? "Sidebar-Button bg-[#363030]"
+              : "Sidebar-Button"
+          }
+          onClick={() => setOpen(false)}
+        >
+          <span className="flex gap-4 cursor-pointer">
+            <Package /> Order
+          </span>
+        </Link>
+        <Link
+          to="/advertisements"
+          className={
+            window.location.pathname === "/advertisements"
+              ? "Sidebar-Button bg-[#363030]"
+              : "Sidebar-Button"
+          }
+          onClick={() => setOpen(false)}
+        >
+          <span className="flex gap-4 cursor-pointer">
+            <Megaphone />
+            Advertising
+          </span>
+        </Link>
+      </div>
+    </div>
+  );
 }

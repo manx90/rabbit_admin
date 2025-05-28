@@ -7,25 +7,13 @@ export function Products() {
 		styleProduct,
 		productInfo,
 		dispatchProductInfo,
-		// setProductInfo,
-		// colorInputs,
-		// variants,
-		// setVariants,
-		// handleInfoChange,
 		mainCategoryProduct,
-		// handleImgWithColorChange,
-		// handleImgWithColorAdd,
-		// ProductInfo,
-		// handleImgWithColorRemoveImg,
-		// handleImgWithColorRemove,
 	} = useProduct();
 	return (
 		<div>
 			<div className={styleProduct.level1}>
 				<InfoProduct
 					styleProduct={styleProduct}
-					// setProductInfo={setProductInfo}
-					// handleInfoChange={handleInfoChange}
 					MainCategoryProduct={
 						mainCategoryProduct
 					}

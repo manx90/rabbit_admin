@@ -6,7 +6,7 @@ export default function MostBox({
 	des,
 }) {
 	return (
-		<div className="flex flex-col p-[24px] max-w-[320px] gap-5 bg-white font-medium rounded-2xl border">
+		<div className="mx-auto flex flex-col p-[24px] max-w-[320px] gap-5 bg-white font-medium rounded-2xl border">
 			<span className=" text-[20px] text-black">
 				{title}
 			</span>
