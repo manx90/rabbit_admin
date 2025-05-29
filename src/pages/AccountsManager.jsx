@@ -12,8 +12,15 @@ export default function AccountsManager() {
     setMessage,
   } = useUsers();
 
-  const [form, setForm] = useState({ name: "", email: "", role: "Admin" });
+  // Added password to form state and showPassword state for toggling visibility
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    role: "Admin",
+    password: "",
+  });
   const [editId, setEditId] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
 
   const [filter, setFilter] = useState("");
   const [filteredUsers, setFilteredUsers] = useState([]);
@@ -53,24 +60,58 @@ export default function AccountsManager() {
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
+  // Reset form including password and hide password toggle
   const resetForm = () => {
-    setForm({ name: "", email: "", role: "Admin" });
+    setForm({ name: "", email: "", role: "Admin", password: "" });
     setEditId(null);
+    setShowPassword(false);
     setMessage(null);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Validate required fields for creation (password is required)
+    if (!form.name.trim() || !form.email.trim() || !form.role.trim()) {
+      setMessage("Error: Name, Email, and Role are required.");
+      return;
+    }
+
+    // When creating a new user, password must be provided
+    if (!editId && !form.password.trim()) {
+      setMessage("Error: Password is required when creating a new user.");
+      return;
+    }
+
+    // For update, password is optional; if empty, do not send or change it
+    const userData = {
+      ...form,
+      id: editId || undefined,
+    };
+
+    // If updating and password is empty, remove password property to avoid changes
+    if (editId && !form.password.trim()) {
+      delete userData.password;
+    }
+
+    // Call update or create API accordingly
     if (editId) {
-      await editUser({ ...form, id: editId });
+      await editUser(userData);
     } else {
-      await createUser(form);
+      await createUser(userData);
     }
   };
 
   const handleEdit = (user) => {
-    setForm({ name: user.name, email: user.email, role: user.role });
+    setForm({
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      password: "",
+    });
+    // Password is not loaded for security, user must enter new password if they want to change it
     setEditId(user.id);
+    setShowPassword(false);
     setMessage(null);
   };
 
@@ -93,8 +134,12 @@ export default function AccountsManager() {
     setDeleteId(null);
   };
 
-  const firstFiveUsers = users.slice(0, 5);
+  const toggleShowPassword = () => {
+    setShowPassword((prev) => !prev);
+  };
 
+  const firstFiveUsers = users.slice(0, 5);
+  const allowPassSkip = true;
   return (
     <div className="max-w-7xl mx-auto p-6 bg-gray-50 min-h-screen">
       <HeaderSection />
@@ -118,6 +163,7 @@ export default function AccountsManager() {
             </div>
           )}
           <form onSubmit={handleSubmit} className="space-y-5">
+            {/* Name input */}
             <input
               type="text"
               name="name"
@@ -125,9 +171,10 @@ export default function AccountsManager() {
               value={form.name}
               onChange={handleChange}
               className="w-full p-3 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-              required
+              required={!editId || (editId && !allowPassSkip)}
               disabled={loading}
             />
+            {/* Email input */}
             <input
               type="email"
               name="email"
@@ -135,21 +182,46 @@ export default function AccountsManager() {
               value={form.email}
               onChange={handleChange}
               className="w-full p-3 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-              required
+              required={!editId || (editId && !allowPassSkip)}
               disabled={loading}
             />
+            {/* Role select */}
             <select
               name="role"
               value={form.role}
               onChange={handleChange}
               className="w-full p-3 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-              required
+              required={!editId || (editId && !allowPassSkip)}
               disabled={loading}
             >
               <option value="SuperAdmin">SuperAdmin</option>
               <option value="Admin">Admin</option>
               <option value="Salesman">Salesman</option>
             </select>
+            {/* Password input with show/hide toggle */}
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                placeholder="Password"
+                value={form.password}
+                onChange={handleChange}
+                className="w-full p-3 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                required={!editId || (editId && !allowPassSkip)}
+                disabled={loading}
+                autoComplete="new-password"
+              />
+              <button
+                type="button"
+                onClick={toggleShowPassword}
+                className="absolute inset-y-0 right-3 flex items-center text-sm text-gray-600 hover:text-gray-900 focus:outline-none"
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? "Hide" : "Show"}
+              </button>
+            </div>
+
+            {/* Submit button */}
             <button
               type="submit"
               disabled={loading}
@@ -167,6 +239,7 @@ export default function AccountsManager() {
                 ? "Update"
                 : "Add"}
             </button>
+            {/* Cancel edit button */}
             {editId && !loading && (
               <button
                 type="button"
@@ -217,27 +290,21 @@ export default function AccountsManager() {
                     key={user.id}
                     className="border-b border-gray-300 hover:bg-gray-50 transition-colors"
                   >
-                    <td className="py-3 px-3 text-sm sm:text-base">
-                      {user.name}
-                    </td>
-                    <td className="py-3 px-3 text-sm sm:text-base hidden sm:table-cell break-all">
+                    <td className="py-3 px-3">{user.name}</td>
+                    <td className="py-3 px-3 hidden sm:table-cell">
                       {user.email}
                     </td>
-                    <td className="py-3 px-3 text-sm sm:text-base">
-                      {user.role}
-                    </td>
-                    <td className="py-3 px-3 flex space-x-3">
+                    <td className="py-3 px-3">{user.role}</td>
+                    <td className="py-3 px-3 space-x-3">
                       <button
                         onClick={() => handleEdit(user)}
-                        className="text-blue-700 hover:underline text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-blue-600 rounded px-2 py-1"
-                        aria-label={`Edit ${user.name}`}
+                        className="text-blue-600 hover:text-blue-800"
                       >
                         Edit
                       </button>
                       <button
                         onClick={() => handleDelete(user.id)}
-                        className="text-red-700 hover:underline text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-red-600 rounded px-2 py-1"
-                        aria-label={`Delete ${user.name}`}
+                        className="text-red-600 hover:text-red-800"
                       >
                         Delete
                       </button>
@@ -250,120 +317,93 @@ export default function AccountsManager() {
         </section>
       </div>
 
-      {/* ---- قسم الفلترة والجدول الجديد ----- */}
-      <section className="mt-12 bg-white rounded-xl shadow-md p-6 border border-black">
-        <h2 className="text-2xl font-semibold mb-4 text-gray-900">All Users</h2>
+      {/* Full Table Section with filter */}
+      <section className="bg-white rounded-xl shadow-md p-6 border border-black mt-10 overflow-x-auto">
+        <h2 className="text-2xl font-semibold mb-6 text-gray-900">
+          All Accounts
+        </h2>
         <input
           type="text"
-          placeholder="Search by name, email, or role..."
+          placeholder="Filter users by name, email or role"
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
-          className="w-full mb-4 p-3 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className="mb-4 w-full p-3 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+          disabled={loading}
         />
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-[600px] border-collapse text-gray-800">
-            <thead>
-              <tr className="border-b border-gray-400 bg-gray-100">
-                <th className="py-3 px-3 text-left text-sm sm:text-base">
-                  Name
-                </th>
-                <th className="py-3 px-3 text-left text-sm sm:text-base">
-                  Email
-                </th>
-                <th className="py-3 px-3 text-left text-sm sm:text-base">
-                  Role
-                </th>
-                <th className="py-3 px-3 text-left text-sm sm:text-base">
-                  Actions
-                </th>
+        <table className="w-full min-w-[650px] border-collapse text-gray-800">
+          <thead>
+            <tr className="border-b border-gray-400 bg-gray-100">
+              <th className="py-3 px-3 text-left text-sm sm:text-base">Name</th>
+              <th className="py-3 px-3 text-left text-sm sm:text-base hidden sm:table-cell">
+                Email
+              </th>
+              <th className="py-3 px-3 text-left text-sm sm:text-base">Role</th>
+              <th className="py-3 px-3 text-left text-sm sm:text-base">
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredUsers.length === 0 ? (
+              <tr>
+                <td
+                  colSpan={4}
+                  className="text-center py-4 text-gray-600 text-sm sm:text-base"
+                >
+                  {loading ? "Loading users..." : "No users found."}
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {filteredUsers.length === 0 ? (
-                <tr>
-                  <td
-                    colSpan={4}
-                    className="text-center py-4 text-gray-600 text-sm sm:text-base"
-                  >
-                    {loading ? "Loading users..." : "No matching users found."}
+            ) : (
+              filteredUsers.map((user) => (
+                <tr
+                  key={user.id}
+                  className="border-b border-gray-300 hover:bg-gray-50 transition-colors"
+                >
+                  <td className="py-3 px-3">{user.name}</td>
+                  <td className="py-3 px-3 hidden sm:table-cell">
+                    {user.email}
+                  </td>
+                  <td className="py-3 px-3">{user.role}</td>
+                  <td className="py-3 px-3 space-x-3">
+                    <button
+                      onClick={() => handleEdit(user)}
+                      className="text-blue-600 hover:text-blue-800"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDelete(user.id)}
+                      className="text-red-600 hover:text-red-800"
+                    >
+                      Delete
+                    </button>
                   </td>
                 </tr>
-              ) : (
-                filteredUsers.map((user) => (
-                  <tr
-                    key={user.id}
-                    className="border-b border-gray-300 hover:bg-gray-50 transition-colors"
-                  >
-                    <td className="py-3 px-3 text-sm sm:text-base">
-                      {user.name}
-                    </td>
-                    <td className="py-3 px-3 text-sm sm:text-base break-all">
-                      {user.email}
-                    </td>
-                    <td className="py-3 px-3 text-sm sm:text-base">
-                      {user.role}
-                    </td>
-                    <td className="py-3 px-3 flex space-x-3">
-                      <button
-                        onClick={() => handleEdit(user)}
-                        className="text-blue-700 hover:underline text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-blue-600 rounded px-2 py-1"
-                        aria-label={`Edit ${user.name}`}
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => handleDelete(user.id)}
-                        className="text-red-700 hover:underline text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-red-600 rounded px-2 py-1"
-                        aria-label={`Delete ${user.name}`}
-                      >
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
+              ))
+            )}
+          </tbody>
+        </table>
       </section>
 
+      {/* Delete confirmation modal */}
       {deleteWarning && (
-        <div
-          className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-30 z-50"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="delete-warning-title"
-        >
-          <div className="bg-white rounded-lg p-6 max-w-sm w-full border border-black shadow-lg">
-            <h3
-              id="delete-warning-title"
-              className="text-lg font-semibold mb-4 text-gray-900"
-            >
-              {deleteWarning}
-            </h3>
-            {deleteWarning.includes("sure") ? (
-              <div className="flex justify-end space-x-4">
-                <button
-                  onClick={confirmDelete}
-                  className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-600"
-                >
-                  Confirm
-                </button>
-                <button
-                  onClick={cancelDelete}
-                  className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400"
-                >
-                  Cancel
-                </button>
-              </div>
-            ) : (
+        <div className="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-sm w-full shadow-lg text-center">
+            <p className="mb-6">{deleteWarning}</p>
+            <div className="flex justify-center space-x-6">
+              <button
+                onClick={confirmDelete}
+                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+              >
+                Confirm
+              </button>
               <button
                 onClick={cancelDelete}
-                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600"
+                className="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400 transition-colors"
               >
-                OK
+                Cancel
               </button>
-            )}
+            </div>
           </div>
         </div>
       )}
@@ -373,11 +413,10 @@ export default function AccountsManager() {
 
 function HeaderSection() {
   return (
-    <header className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-6 sm:gap-0">
+    <header className="text-center">
       <h1 className="text-3xl font-bold text-gray-900">Accounts Manager</h1>
-      <p className="text-gray-700 max-w-sm">
-        Manage user accounts easily. Add, edit, delete, and filter users
-        quickly.
+      <p className="text-gray-600 mt-2">
+        Manage user accounts with create, edit, and delete functions.
       </p>
     </header>
   );
