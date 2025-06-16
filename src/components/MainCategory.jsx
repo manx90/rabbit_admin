@@ -1,13 +1,14 @@
-import { useProduct } from "../Contexts/Product.Context";
+// import { useProduct } from "../Contexts/Product.Context";
+import { useUtiles } from "../Contexts/utils.context";
+import { useCategory } from "../Contexts/Category.Context";
 import InputWithButton from "./ui/InputWithButton";
 export function MainCategory() {
+	const { isLoading1 } = useUtiles();
 	const {
-		isLoading1,
 		MainCategory,
 		setMainCategory,
-		AddCategory,
 		setAddCategory,
-	} = useProduct();
+	} = useCategory();
 	if (isLoading1) {
 		return (
 			<div className="flex items-center justify-center p-[12px] rounded-2xl bg-gray-50">

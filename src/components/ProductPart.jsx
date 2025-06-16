@@ -2,13 +2,15 @@ import { InfoProduct } from "./InfoProduct";
 import { ColorWithSizes } from "./ColorWithSizes";
 import { UploadImageColors } from "./UploadImageColor";
 import { useProduct } from "../Contexts/Product.Context";
+import { useCategory } from "../Contexts/Category.Context";
 export function Products() {
 	const {
 		styleProduct,
 		productInfo,
 		dispatchProductInfo,
-		mainCategoryProduct,
+		updateId,
 	} = useProduct();
+	const { mainCategoryProduct } = useCategory();
 	return (
 		<div>
 			<div className={styleProduct.level1}>
@@ -21,6 +23,7 @@ export function Products() {
 					dispatchProductInfo={
 						dispatchProductInfo
 					}
+					updateId={updateId}
 				/>
 				<UploadImageColors
 					styleProduct={styleProduct}
@@ -30,13 +33,11 @@ export function Products() {
 					}
 				/>
 				<ColorWithSizes
-					
 					styleProduct={styleProduct}
 					dispatchProductInfo={
 						dispatchProductInfo
 					}
 					productInfo={productInfo}
-				
 				/>
 			</div>
 		</div>

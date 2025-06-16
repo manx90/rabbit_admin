@@ -1,5 +1,5 @@
 import React from "react";
-import { LayoutDashboard, Shirt, Package, Megaphone, User } from "lucide-react";
+import { LayoutDashboard, Shirt, Package, Megaphone, User, ListTree } from "lucide-react";
 import { Link } from "react-router-dom";
 import SidebarToggle from "./SidebarToggle";
 
@@ -55,6 +55,14 @@ export default function Sidebar({ open, setOpen }) {
           icon={<Shirt />}
           label="Product"
           isActive={window.location.pathname === "/product"}
+        />
+        <NavLink
+          to="/categories"
+          open={open}
+          setOpen={setOpen}
+          icon={<ListTree />}
+          label="Categories"
+          isActive={window.location.pathname === "/categories"}
         />
         <NavLink
           to="/order"

@@ -1,136 +1,104 @@
 import React, { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../Contexts/Auth.context";
 export default function Login() {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [rememberMe, setRememberMe] = useState(false);
-  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
   const navigate = useNavigate();
-
-  const handleSubmit = (e) => {
+  const { setIsAuthenticated } = useAuth();
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Basic validation
-    if (!email || !password) {
-      setError("Please fill in all fields");
-      return;
+    setLoading(true);
+    try {
+      const res = await axios.post("http://api.rabbit.ps/auth/login", {
+        username,
+        password,
+      });
+      setSuccess(res.data.message);
+      setLoading(false);
+      localStorage.setItem("token", res.data.data.access_token);
+      setIsAuthenticated(true);
+      navigate("/product");
+    } catch (err) {
+      setError(err.response.data.message);
+      setLoading(false);
     }
-    
-    // Here you would typically handle authentication with your backend
-    // For now, we'll just simulate a successful login
-    console.log("Login attempt with:", { email, password, rememberMe });
-    
-    // Set authentication status in localStorage
-    localStorage.setItem("isAuthenticated", "true");
-    if (rememberMe) {
-      localStorage.setItem("userEmail", email);
-    }
-    
-    // Redirect to dashboard on successful login
-    navigate("/dashboard");
   };
-
   return (
-    <div className="flex min-h-screen bg-gray-50">
-      {/* Left side - Brand/Logo */}
-      <div className="hidden lg:flex lg:w-1/2 bg-[#0095FF] flex-col justify-center items-center p-12 text-white">
-        <div className="max-w-md">
-          <h1 className="text-4xl font-bold mb-6">Rabbit Admin</h1>
-          <p className="text-xl mb-8">
-            Welcome back! Log in to access your admin dashboard and manage your products and orders.
-          </p>
-          <div className="bg-white/10 p-6 rounded-2xl">
-            <p className="italic text-lg mb-4">
-              "The Rabbit Admin dashboard has streamlined our entire inventory management process."
-            </p>
-            <div className="flex items-center">
-              <div className="w-12 h-12 bg-white/20 rounded-full mr-4"></div>
-              <div>
-                <p className="font-semibold">Sarah Johnson</p>
-                <p className="text-sm">Product Manager</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
+    <div className="flex flex-col items-center md:flex-row min-h-screen bg-gray-50">
       {/* Right side - Login Form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
+      <div className="w-full lg:w-1/2 flex mx-auto items-center justify-center p-4 sm:p-6 md:p-8">
         <div className="w-full max-w-md">
-          <div className="text-center mb-10">
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">Welcome Back</h2>
-            <p className="text-gray-600">Please enter your credentials to sign in</p>
+          {/* Logo for mobile view */}
+          <div className="md:flex flex justify-center mb-6">
+            <img src="/logo-black.png" alt="Rabbit Admin" className="" />
           </div>
 
-          {error && (
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-              {error}
+          <div className="text-center mb-6 sm:mb-10">
+            <h2 className="text-xl md:text-3xl font-bold text-gray-900 mb-2">
+              Sign in to Rabbit Admin Panel
+            </h2>
+            <p className="text-gray-600">Welcome back!</p>
+          </div>
+          {error && !success && (
+            <div className="p-4 mb-4 text-red-700 bg-red-100 rounded-lg border border-red-200">
+              <p className="font-semibold">{error}</p>
+            </div>
+          )}
+          {success && !error && (
+            <div className="p-4 mb-4 text-green-700 bg-green-100 rounded-lg border border-green-200">
+              <p className="font-semibold">{success}</p>
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                Email Address
+              <label
+                htmlFor="username"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                username
               </label>
               <input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-[#0095FF] focus:border-[#0095FF]"
-                placeholder="Enter your email"
+                id="username"
+                type="text"
+                className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-[#0095FF] focus:border-[#0095FF] transition-all duration-200"
+                placeholder="Enter your username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
               />
             </div>
 
             <div>
               <div className="flex items-center justify-between mb-1">
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="password"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Password
                 </label>
-                <a href="#" className="text-sm text-[#0095FF] hover:underline">
-                  Forgot password?
-                </a>
               </div>
               <input
-                id="password"
-                type="password"
+                id="text"
+                type="text"
+                className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-[#0095FF] focus:border-[#0095FF] transition-all duration-200"
+                placeholder="Enter your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-[#0095FF] focus:border-[#0095FF]"
-                placeholder="Enter your password"
               />
-            </div>
-
-            <div className="flex items-center">
-              <input
-                id="remember-me"
-                type="checkbox"
-                checked={rememberMe}
-                onChange={(e) => setRememberMe(e.target.checked)}
-                className="h-4 w-4 text-[#0095FF] focus:ring-[#0095FF] border-gray-300 rounded"
-              />
-              <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700">
-                Remember me
-              </label>
             </div>
 
             <button
               type="submit"
-              className="w-full bg-[#0095FF] text-white py-3 px-4 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              className="w-full bg-[#0095FF] text-white py-2 sm:py-3 px-4 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 font-medium text-base"
             >
-              Sign In
+              {loading ? "Logging in..." : "Log in"}
             </button>
           </form>
-
-          <div className="text-center mt-8">
-            <p className="text-gray-600">
-              Don't have an account?{" "}
-              <Link to="/signup" className="text-[#0095FF] hover:underline font-medium">
-                Sign up
-              </Link>
-            </p>
-          </div>
         </div>
       </div>
     </div>
