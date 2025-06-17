@@ -9,6 +9,7 @@ export function Products() {
 		productInfo,
 		dispatchProductInfo,
 		updateId,
+		isUpdate,
 	} = useProduct();
 	const { mainCategoryProduct } = useCategory();
 	return (
@@ -31,6 +32,7 @@ export function Products() {
 					dispatchProductInfo={
 						dispatchProductInfo
 					}
+					isUpdate={isUpdate}
 				/>
 				<ColorWithSizes
 					styleProduct={styleProduct}

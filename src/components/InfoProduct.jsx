@@ -67,7 +67,8 @@ export function InfoProduct({
 									cnOption="text-[16px] font-medium"
 									label="Category"
 									placeholder="Select Category"
-									options={MainCategoryProduct} // options array
+									options={MainCategoryProduct}
+									value={ProductInfo.categoryId}
 									productInfo={ProductInfo}
 									onChange={(e) => {
 										const selectedValue = e.target

@@ -5,73 +5,80 @@ import {
 	useReducer,
 	useState,
 } from "react";
-import axios from "axios";
 import { useUtiles } from "./utils.context";
+import { Product } from "./../api/productAPI";
 
 const ProductContext = createContext();
 const initialState = {
 	name: "",
-	categoryId: null,
-	subcategoryId: null,
 	description: "",
+	categoryId: "",
+	subcategoryId: "",
 	colors: [
 		{
 			name: "",
-			image: null,
+			imgColor: null,
 		},
 	],
 	sizeDetails: [
 		{
 			sizeName: "",
-			price: null,
+			price: "",
 			quantities: [
 				{
 					colorName: "",
-					quantity: null,
+					quantity: "",
 				},
 			],
 		},
 	],
 	imgs: [],
 	imgCover: null,
-	imgMeasurement: null, // Fixed typo: imgMeasurment -> imgMeasurement
+	imgMeasurement: null,
 	imgChart: null,
 	isActive: true,
 };
 
-const url = import.meta.env
-	.VITE_RABBIT_PI_BASE_URL;
 export function ProductProvider({ children }) {
-	const { setIsLoading1, styleProduct } =
-		useUtiles();
+	const {
+		setIsLoading1,
+		styleProduct,
+		setMessage,
+		Message,
+	} = useUtiles();
 
 	const [productInfo, dispatchProductInfo] =
 		useReducer(
 			// Reducer function
 
 			(state, action) => {
+				let newState;
 				switch (action.type) {
 					case "SET_PRODUCT_NAME":
-						return {
+						newState = {
 							...state,
 							name: action.payload,
 						};
+						break;
 
 					case "SET_CATEGORY_ID":
-						return {
+						newState = {
 							...state,
 							categoryId: action.payload,
 						};
+						break;
 					case "SET_SUBCATEGORY_ID":
-						return {
+						newState = {
 							...state,
 							subcategoryId: action.payload,
 						};
+						break;
 					case "SET_DESCRIPTION":
-						return {
+						newState = {
 							...state,
 							description: action.payload,
 						};
+						break;
 					case "ADD_COLOR_WITH_IMAGE":
 						if (!action.payload) {
 							return {
@@ -80,7 +87,7 @@ export function ProductProvider({ children }) {
 									...state.colors,
 									{
 										name: "",
-										image: null,
+										imgColor: null,
 									},
 								],
 							};
@@ -95,9 +102,10 @@ export function ProductProvider({ children }) {
 												name:
 													action.payload.name ??
 													item.name,
-												image:
-													action.payload.image ??
-													item.image,
+												imgColor:
+													action.payload
+														.imgColor ??
+													item.imgColor,
 										  }
 										: item,
 							),
@@ -113,7 +121,7 @@ export function ProductProvider({ children }) {
 					case "ADD_SIZE_PRICE":
 						return {
 							...state,
-							sizes: state.sizes.map(
+							sizeDetails: state.sizeDetails.map(
 								(item, index) =>
 									index === action.payload.index
 										? {
@@ -133,7 +141,7 @@ export function ProductProvider({ children }) {
 					case "ADD_COLOR_QUANTITY_VALUE":
 						return {
 							...state,
-							sizes: state.sizes.map(
+							sizeDetails: state.sizeDetails.map(
 								(item, itemIndex) =>
 									itemIndex ===
 									action.payload.index
@@ -169,7 +177,7 @@ export function ProductProvider({ children }) {
 					case "ADD_ANOTHER_COLOR_QUANTITY":
 						return {
 							...state,
-							sizes: state.sizes.map(
+							sizeDetails: state.sizeDetails.map(
 								(item, index) =>
 									index ===
 									action.payload.variantIndex
@@ -196,10 +204,12 @@ export function ProductProvider({ children }) {
 					case "REMOVE_SIZE_QUANTITY_PRICE":
 						return {
 							...state,
-							sizes: state.sizes.filter(
-								(_, index) =>
-									index !== action.payload.index,
-							),
+							sizeDetails:
+								state.sizeDetails.filter(
+									(_, index) =>
+										index !==
+										action.payload.index,
+								),
 						};
 					case "SET_IMGS":
 						return {
@@ -222,13 +232,11 @@ export function ProductProvider({ children }) {
 							imgChart: action.payload,
 						};
 					case "RESET_FORM":
-						return {
-							...initialState,
-						};
+						return initialState;
 					case "REMOVE_COLOR_QUANTITY":
 						return {
 							...state,
-							sizes: state.sizes.map(
+							sizeDetails: state.sizeDetails.map(
 								(item, itemIndex) =>
 									itemIndex ===
 									action.payload.variantIndex
@@ -248,8 +256,8 @@ export function ProductProvider({ children }) {
 					case "ADD_SIZE_VARIANT":
 						return {
 							...state,
-							sizes: [
-								...state.sizes,
+							sizeDetails: [
+								...state.sizeDetails,
 								{
 									sizeName: "",
 									price: null,
@@ -279,36 +287,40 @@ export function ProductProvider({ children }) {
 							...action.payload,
 						};
 					default:
-						return state;
+						newState = state;
 				}
+				return newState;
 			},
 			initialState,
 		); // Pass initialState as second argument
 
-	const [isUpdate, setUpdate] = useState(false);
+	const [isUpdate, setIsUpdate] = useState(false);
 	const [updateId, setUpdateId] = useState("");
+
 	// update id
 	useEffect(() => {
-		if (updateId === "") return;
-
-		const fetchProduct = async () => {
+		if (updateId === "" || isUpdate === false) return;
+		const getProduct = async () => {
 			setIsLoading1(true);
 			try {
-				const response = await axios.get(
-					`${url}/product/${updateId}`,
-					{
-						headers: {
-							Authorization: `Bearer ${localStorage.getItem(
-								"token",
-							)}`,
-							referrerPolicy: "unsafe-url",
-						},
-					},
+				const response = await Product.getOne(
+					updateId,
 				);
-				const data = response.data;
+				const data = response;
 				dispatchProductInfo({
 					type: "SET_PRODUCT_INFO",
-					payload: data,
+					payload: {
+						...data,
+						imgs: [],
+						imgCover: null,
+						imgMeasurement: null,
+						imgChart: null,
+						colors:
+							data.colors?.map((color) => ({
+								...color,
+								imgColor: null,
+							})) || [],
+					},
 				});
 				dispatchProductInfo({
 					type: "SET_CATEGORY_ID",
@@ -325,24 +337,25 @@ export function ProductProvider({ children }) {
 				);
 			} finally {
 				setIsLoading1(false);
-				console.log(productInfo);
 			}
 		};
-		fetchProduct();
+		getProduct();
 	}, [
 		updateId,
 		dispatchProductInfo,
 		setIsLoading1,
+		isUpdate,
 	]);
-
 	const Values = {
 		dispatchProductInfo,
 		productInfo,
 		styleProduct,
 		isUpdate,
-		setUpdate,
+		setIsUpdate,
 		updateId,
 		setUpdateId,
+		setMessage,
+		Message,
 	};
 	return (
 		<ProductContext.Provider value={Values}>

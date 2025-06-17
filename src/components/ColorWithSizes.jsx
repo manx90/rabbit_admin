@@ -38,7 +38,7 @@ export function ColorWithSizes({
               id={`size-${variantIndex}`}
               placeholder="Size"
               className={styleProduct.input_1}
-              value={variant.sizeName}
+              value={variant.sizeName || ""}
               onChange={(e) => {
                 dispatchProductInfo({
                   type: "ADD_SIZE_PRICE",

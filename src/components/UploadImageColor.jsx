@@ -1,7 +1,9 @@
+
 export function UploadImageColors({
 	styleProduct,
 	ProductInfo,
 	dispatchProductInfo,
+	isUpdate,
 }) {
 	const handleFileChange = (e, index) => {
 		const file = e.target.files?.[0];
@@ -10,7 +12,7 @@ export function UploadImageColors({
 				type: "ADD_COLOR_WITH_IMAGE",
 				payload: {
 					index,
-					image: file,
+					imgColor: file,
 				},
 			});
 		}
@@ -35,12 +37,13 @@ export function UploadImageColors({
 					id="productImage"
 				>
 					<div className="flex flex-col items-center">
-						{color.imgColor ? (
+						{!isUpdate && color.imgColor ? (
 							<div className="relative my-auto">
 								<img
 									src={
-										"https://api.rabbit.ps/uploads/" +
-										color.imgColor
+										URL.createObjectURL(
+											color.imgColor
+										)
 									}
 									alt={`Color ${index + 1}`}
 									className="h-14 w-24 object-cover rounded-lg my-auto"

@@ -6,25 +6,30 @@ import tailwindcss from "@tailwindcss/vite";
 
 // https://vite.dev/config/
 export default defineConfig({
-  // Plugins used (React only)
-  plugins: [react(), tailwindcss()],
+	// Plugins used (React only)
+	plugins: [react(), tailwindcss()],
 
-  // Path alias
-  resolve: {
-    alias: {
-      "@": path.resolve(path.dirname(fileURLToPath(import.meta.url)), "./src"),
-    },
-  },
+	// Path alias
+	resolve: {
+		alias: {
+			"@": path.resolve(
+				path.dirname(
+					fileURLToPath(import.meta.url),
+				),
+				"./src",
+			),
+		},
+	},
 
-  // Development server settings
-  server: {
-    port: 8080,
-    open: true,
-  },
+	// Development server settings
+	server: {
+		port: 8080,
+		open: true,
+	},
 
-  // Build output settings
-  build: {
-    outDir: "dist",
-    emptyOutDir: true,
-  },
+	// Build output settings
+	build: {
+		outDir: "app",
+		emptyOutDir: true,
+	},
 });

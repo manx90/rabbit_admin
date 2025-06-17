@@ -6,6 +6,7 @@ import {
 } from "react";
 import axios from "axios";
 import { useUtiles } from "./utils.context";
+import { Category } from "../api/cateogryApi";
 
 const url = import.meta.env
 	.VITE_RABBIT_PI_BASE_URL;
@@ -29,7 +30,7 @@ export function CategoryProvider({ children }) {
 		mainCategoryProduct,
 		setMainCategoryProduct,
 	] = useState([]);
-	
+
 	// for Main Category Adding
 	useEffect(() => {
 		function addCategory() {
@@ -101,22 +102,13 @@ export function CategoryProvider({ children }) {
 	// for SubCategory Adding
 	useEffect(() => {
 		function addSubCategory() {
-			axios
-				.post(
-					`${url}/category/subcategory`,
-					{
-						categoryId: MainCategory,
-						name: SubCategory,
-					},
-					{
-						headers: {
-							Authorization: `Bearer ${localStorage.getItem(
-								"token",
-							)}`,
-							referrerPolicy: "unsafe-url",
-						},
-					},
-				)
+			const response = Category.createSubCategory(
+				{
+					name: SubCategory,
+					categoryId: MainCategory,
+				},
+			);
+			response
 				.then((res) => {
 					setIsLoading2(false);
 					setMessage({

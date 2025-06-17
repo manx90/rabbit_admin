@@ -1,203 +1,54 @@
-import React, {
-	useEffect,
-	useState,
-} from "react";
 import "../index.css";
-import {
-	useReactTable,
-	createColumnHelper,
-	flexRender,
-	getCoreRowModel,
-	getSortedRowModel,
-	getFilteredRowModel,
-	getPaginationRowModel,
-	getFacetedUniqueValues,
-	getFacetedRowModel,
-	getFacetedMinMaxValues,
-} from "@tanstack/react-table";
+
+import { Product } from "../api/productAPI";
 import { useProduct } from "../Contexts/Product.Context";
+import { useTableProduct } from "../Contexts/TableProduct.context";
+import { flexRender } from "@tanstack/react-table";
+import { useUtiles } from "../Contexts/utils.context";
+
 export default function Table() {
-	const [data, setData] = useState([]);
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState(null);
-	const [globalFilter, setGlobalFilter] =
-		useState("");
-	const { setUpdateId } = useProduct();
-
-	useEffect(() => {
-		const fetchProductData = async () => {
-			try {
-				setLoading(true);
-				const response = await fetch(
-					"http://api.rabbit.ps/product",
-					{
-						headers: {
-							Authorization: `Bearer ${localStorage.getItem(
-								"token",
-							)}`,
-							referrerPolicy: "unsafe-url",
-						},
-					},
-				);
-				if (!response.ok) {
-					throw new Error(
-						"Failed to fetch products",
-					);
-				}
-				const data = await response.json();
-				setData(data.data);
-			} catch (error) {
-				console.error(
-					"Error fetching product data:",
-					error,
-				);
-				setError(error.message);
-			} finally {
-				setLoading(false);
-			}
-		};
-
-		fetchProductData();
-	}, []);
-
-	const columnHelper = createColumnHelper();
-	const columns = [
-		columnHelper.accessor("id", {
-			header: "#",
-			cell: (info) => info.getValue(),
-		}),
-		columnHelper.accessor("name", {
-			header: "Name",
-			cell: (info) => info.getValue(),
-			enableSorting: true,
-		}),
-		columnHelper.accessor("description", {
-			header: "Description",
-			cell: (info) => info.getValue(),
-		}),
-		columnHelper.accessor("category", {
-			header: "Category",
-			cell: (info) => {
-				const category = info.getValue();
-				return category?.name || "N/A";
-			},
-			enableSorting: true,
-		}),
-		columnHelper.accessor("subCategory", {
-			header: "Sub Category",
-			cell: (info) => {
-				const subCategory = info.getValue();
-				return subCategory?.name || "N/A";
-			},
-			enableSorting: true,
-		}),
-		columnHelper.accessor("publishState", {
-			header: "publishState",
-			cell: (info) => {
-				return (
-					<span
-						className={`px-2 py-1 rounded-full text-sm ${
-							info.getValue() === "published"
-								? "bg-green-100 text-green-800"
-								: "bg-red-100 text-red-800"
-						}`}
-					>
-						{info.getValue()}
-					</span>
-				);
-			},
-			enableSorting: true,
-		}),
-	];
-
-	const [sorting, setSorting] = useState([]);
-	const [pagination, setPagination] = useState({
-		pageIndex: 0,
-		pageSize: 10,
-	});
-	const [columnFilters, setColumnFilters] =
-		useState([]);
-	const [columnResizeMode] = useState("onChange");
-	const [columnResizeDirection] = useState("ltr");
-
-	const table = useReactTable({
-		data,
-		columns,
-		state: {
-			sorting,
-			columnFilters,
-			pagination,
-			globalFilter,
-		},
-		onGlobalFilterChange: setGlobalFilter,
-		onColumnFiltersChange: setColumnFilters,
-		onSortingChange: setSorting,
-		onPaginationChange: setPagination,
-		getCoreRowModel: getCoreRowModel(),
-		getSortedRowModel: getSortedRowModel(),
-		getFilteredRowModel: getFilteredRowModel(),
-		getPaginationRowModel:
-			getPaginationRowModel(),
-		getFacetedRowModel: getFacetedRowModel(),
-		getFacetedMinMaxValues:
-			getFacetedMinMaxValues(),
-		getFacetedUniqueValues:
-			getFacetedUniqueValues(),
-		columnResizeMode,
-		columnResizeDirection,
-	});
-
-	if (loading) {
-		return (
-			<div className="flex items-center justify-center min-h-[400px]">
-				<div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
-			</div>
-		);
-	}
-
-	if (error) {
-		return (
-			<div className="flex items-center justify-center min-h-[400px]">
-				<div className="text-red-500 text-center">
-					<p className="text-xl font-semibold">
-						Error loading products
-					</p>
-					<p className="text-sm">{error}</p>
-				</div>
-			</div>
-		);
-	}
-
-	if (!data || data.length === 0) {
-		return (
-			<div className="flex items-center justify-center min-h-[400px]">
-				<div className="text-gray-500 text-center">
-					<p className="text-xl font-semibold">
-						No products found
-					</p>
-					<p className="text-sm">
-						Add some products to see them here
-					</p>
-				</div>
-			</div>
-		);
-	}
+	const {
+		loading,
+		error,
+		globalFilter,
+		setGlobalFilter,
+		table,
+		fetchProductData,
+	} = useTableProduct();
+	const { setUpdateId, setIsUpdate } =
+		useProduct();
+	const {setMessage} = useUtiles();
 
 	return (
-		<div className="p-4 bg-white rounded-lg shadow-lg">
+		<div className="p-6 bg-white rounded-xl shadow-lg">
 			{/* Search and Controls */}
-			<div className="mb-4 flex flex-col sm:flex-row gap-4 justify-between items-center">
-				<div className="w-full sm:w-64">
-					<input
-						value={globalFilter ?? ""}
-						onChange={(e) =>
-							setGlobalFilter(e.target.value)
-						}
-						className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-						placeholder="Search products..."
-					/>
+			<div className="mb-6 flex flex-col sm:flex-row gap-4 justify-between items-center">
+				<div className="w-full sm:w-72">
+					<div className="relative">
+						<input
+							value={globalFilter ?? ""}
+							onChange={(e) =>
+								setGlobalFilter(e.target.value)
+							}
+							className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+							placeholder="Search products..."
+						/>
+						<svg
+							className="absolute left-3 top-3 h-5 w-5 text-gray-400"
+							fill="none"
+							stroke="currentColor"
+							viewBox="0 0 24 24"
+						>
+							<path
+								strokeLinecap="round"
+								strokeLinejoin="round"
+								strokeWidth={2}
+								d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+							/>
+						</svg>
+					</div>
 				</div>
-				<div className="flex gap-2">
+				<div className="flex gap-3">
 					<select
 						value={
 							table.getState().pagination.pageSize
@@ -207,7 +58,7 @@ export default function Table() {
 								Number(e.target.value),
 							);
 						}}
-						className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+						className="px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
 					>
 						{[5, 10, 20, 30, 40, 50].map(
 							(pageSize) => (
@@ -224,10 +75,10 @@ export default function Table() {
 			</div>
 			{loading ? (
 				<div className="flex justify-center items-center h-48">
-					<div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+					<div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-500"></div>
 				</div>
 			) : error ? (
-				<div className="text-red-500 p-4 text-center">
+				<div className="text-red-500 p-4 text-center bg-red-50 rounded-lg">
 					{error}
 				</div>
 			) : (
@@ -243,42 +94,71 @@ export default function Table() {
 												(header) => (
 													<th
 														key={header.id}
-														onClick={() => {
-															header.column.getToggleSortingHandler();
-														}}
-														className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors"
+														onClick={header.column.getToggleSortingHandler()}
+														className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors relative"
+														style={{ width: header.getSize() }}
 													>
 														<div className="flex items-center space-x-1">
 															<span>
 																{flexRender(
-																	header.column
-																		.columnDef
-																		.header,
-																	header.getContext(),
+																	header.column.columnDef.header,
+																	header.getContext()
 																)}
 															</span>
-
 															{header.column.getCanSort() && (
-																<svg
-																	className="w-4 h-4 text-gray-400"
-																	fill="none"
-																	stroke="currentColor"
-																	viewBox="0 0 24 24"
-																>
-																	<path
-																		strokeLinecap="round"
-																		strokeLinejoin="round"
-																		strokeWidth={
-																			2
-																		}
-																		d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"
-																	/>
-																</svg>
+																<div className="flex flex-col">
+																	<svg
+																		className={`w-3 h-3 -mb-1 ${
+																			header.column.getIsSorted() === "asc"
+																				? "text-blue-600"
+																				: "text-gray-400"
+																		}`}
+																		fill="none"
+																		stroke="currentColor"
+																		viewBox="0 0 24 24"
+																	>
+																		<path
+																			strokeLinecap="round"
+																			strokeLinejoin="round"
+																			strokeWidth={2}
+																			d="M5 15l7-7 7 7"
+																		/>
+																	</svg>
+																	<svg
+																		className={`w-3 h-3 ${
+																			header.column.getIsSorted() === "desc"
+																				? "text-blue-600"
+																				: "text-gray-400"
+																		}`}
+																		fill="none"
+																		stroke="currentColor"
+																		viewBox="0 0 24 24"
+																	>
+																		<path
+																			strokeLinecap="round"
+																			strokeLinejoin="round"
+																			strokeWidth={2}
+																			d="M19 9l-7 7-7-7"
+																		/>
+																	</svg>
+																</div>
 															)}
 														</div>
+														{header.column.getCanResize() && (
+															<div
+																onMouseDown={header.getResizeHandler()}
+																onTouchStart={header.getResizeHandler()}
+																className={`absolute right-0 top-0 h-full w-1 cursor-col-resize select-none touch-none ${
+																	header.column.getIsResizing() ? "bg-blue-500" : "bg-gray-200"
+																}`}
+															/>
+														)}
 													</th>
 												),
 											)}
+											<th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+												Actions
+											</th>
 										</tr>
 									))}
 							</thead>
@@ -288,22 +168,21 @@ export default function Table() {
 									.rows.map((row) => (
 										<tr
 											key={row.id}
-											onClick={() => {
-												setUpdateId(
-													row.getValue("id"),
-												);
-												console.log(
-													row.getValue("id"),
-												);
-											}}
-											className="hover:bg-gray-50 transition-colors cursor-pointer"
+											className="hover:bg-gray-50 transition-colors"
 										>
 											{row
 												.getVisibleCells()
 												.map((cell) => (
 													<td
 														key={cell.id}
-														className="px-6 py-4 whitespace-nowrap text-sm text-gray-600"
+														onClick={() => {
+															setUpdateId(
+																row.getValue("id"),
+															);
+															setIsUpdate(true);
+														}}
+														className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 cursor-pointer"
+														style={{ width: cell.column.getSize() }}
 													>
 														{flexRender(
 															cell.column
@@ -312,6 +191,74 @@ export default function Table() {
 														)}
 													</td>
 												))}
+											<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+												<div className="flex items-center space-x-3">
+													<button
+														onClick={() => {
+															setUpdateId(
+																row.getValue("id"),
+															);
+															setIsUpdate(true);
+														}}
+														className="p-2 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-lg transition-colors"
+													>
+														<svg
+															className="w-5 h-5"
+															fill="none"
+															stroke="currentColor"
+															viewBox="0 0 24 24"
+														>
+															<path
+																strokeLinecap="round"
+																strokeLinejoin="round"
+																strokeWidth={2}
+																d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+															/>
+														</svg>
+													</button>
+													<button
+														onClick={async () => {
+															try {
+																const res = await Product.deleteOne(row.getValue("id"));
+																if (res && (res.status === true || res.success === true)) {
+																	setMessage({
+																		type: "success",
+																		text: "Product deleted successfully"
+																	});
+																	fetchProductData();
+																} else {
+																	setMessage({
+																		type: "error", 
+																		text: res?.message || "Failed to delete product"
+																	});
+																	console.log("Delete response:", res);
+																}
+															} catch (error) {
+																setMessage({
+																	type: "error",
+																	text: error.message || "An error occurred while deleting the product"
+																});
+																console.error("Delete error:", error);
+															}
+														}}
+														className="p-2 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-lg transition-colors"
+													>
+														<svg
+															className="w-5 h-5"
+															fill="none"
+															stroke="currentColor"
+															viewBox="0 0 24 24"
+														>
+															<path
+																strokeLinecap="round"
+																strokeLinejoin="round"
+																strokeWidth={2}
+																d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+															/>
+														</svg>
+													</button>
+												</div>
+											</td>
 										</tr>
 									))}
 							</tbody>
@@ -361,27 +308,6 @@ export default function Table() {
 							</button>
 						</div>
 						<div className="flex items-center space-x-4">
-							<select
-								value={
-									table.getState().pagination
-										.pageSize
-								}
-								onChange={(e) =>
-									table.setPageSize(
-										Number(e.target.value),
-									)
-								}
-								className="px-3 py-2 border border-gray-200 rounded-lg text-sm text-gray-600 focus:outline-none focus:border-blue-500 transition-colors"
-							>
-								{[10, 25, 50].map((pageSize) => (
-									<option
-										key={pageSize}
-										value={pageSize}
-									>
-										Show {pageSize}
-									</option>
-								))}
-							</select>
 							<span className="text-sm text-gray-600">
 								Page{" "}
 								{table.getState().pagination
