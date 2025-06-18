@@ -160,7 +160,7 @@ export default function App() {
 													path="/"
 													element={
 														<ProtectedRoute>
-															<Navigate to="/dashboard" replace />
+															<Navigate to="/product" replace />
 														</ProtectedRoute>
 													}
 												/>
