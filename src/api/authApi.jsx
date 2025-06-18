@@ -2,6 +2,7 @@ import axiosClient from "./axiosClient";
 
 const mainDirection = "/auth";
 export class Auth {
+
 	static login(formData) {
 		return axiosClient.post(
 			`${mainDirection}/login`,
@@ -13,7 +14,6 @@ export class Auth {
 			},
 		);
 	}
-
 	static register(formData) {
 		return axiosClient.post(
 			`${mainDirection}/register`,
@@ -25,13 +25,11 @@ export class Auth {
 			},
 		);
 	}
-
 	static isLoggedIn() {
 		return axiosClient.get(
 			`${mainDirection}/isLoggedIn`,
 		);
 	}
-
 	static changePassword(id, formData) {
 		return axiosClient.post(
 			`${mainDirection}/change-password/${id}`,
@@ -43,25 +41,21 @@ export class Auth {
 			},
 		);
 	}
-
 	static getMe() {
 		return axiosClient.get(
 			`${mainDirection}/user`,
 		);
 	}
-
 	static getAll() {
 		return axiosClient.get(
 			`${mainDirection}/all`,
 		);
 	}
-
 	static deleteOne(name) {
 		return axiosClient.delete(
 			`${mainDirection}/user/${name}`,
 		);
 	}
-
 	static createUser(formData) {
 		return axiosClient.post(
 			`${mainDirection}/create-user`,
@@ -73,9 +67,8 @@ export class Auth {
 			},
 		);
 	}
-
 	static updateUser(id, formData) {
-		return axiosClient.put(
+		return axiosClient.post(
 			`${mainDirection}/update-user/${id}`,
 			formData,
 			{

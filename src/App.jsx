@@ -9,6 +9,7 @@ import Dashboard from "./pages/Dashboard";
 import Sidebar from "./components/Sidebar";
 import Product from "./pages/Product";
 import Login from "./pages/Login";
+import Order from "./pages/Order";
 import SignUp from "./pages/SignUp";
 import AccountsManager from "./pages/AccountsManager";
 import Header from "./components/Header";
@@ -20,8 +21,7 @@ import PublicRoute from "./utils/PublicRoute";
 import { UtilesProvider } from "./Contexts/utils.context";
 import { CategoryProvider } from "./Contexts/Category.Context";
 import { UpdateProvider } from "./Contexts/Update.Context";
-import Table from "./components/Table";
-import { TableProvider } from "./Contexts/TableProduct.context";
+import { AccountProvider } from "./Contexts/AccountContext";
 
 export default function App() {
 	const [sidebarOpen, setSidebarOpen] =
@@ -133,76 +133,79 @@ export default function App() {
 				<CategoryProvider>
 					<ProductProvider>
 						<UpdateProvider>
-							<BrowserRouter>
-								<div className="flex flex-col relative">
-									{sidebarOpen && isMobile && (
-										<div
-											className="fixed inset-0 bg-black bg-opacity-15 z-[50] transition-opacity duration-500 ease-in-out"
-											onClick={() =>
-												setSidebarOpen(false)
-											}
-										/>
-									)}
-									<ProtectedRoute>
-										<Header
+							<AccountProvider>
+								<BrowserRouter>
+									<div className="flex flex-col relative">
+										{sidebarOpen && isMobile && (
+											<div
+												className="fixed inset-0 bg-black bg-opacity-15 z-[50] transition-opacity duration-500 ease-in-out"
+												onClick={() =>
+													setSidebarOpen(false)
+												}
+											/>
+										)}
+										<ProtectedRoute>
+											<Header
+												open={sidebarOpen}
+												setOpen={setSidebarOpen}
+											/>
+										</ProtectedRoute>
+										<Sidebar
 											open={sidebarOpen}
 											setOpen={setSidebarOpen}
 										/>
-									</ProtectedRoute>
-									<Sidebar
-										open={sidebarOpen}
-										setOpen={setSidebarOpen}
-									/>
-									<div className="flex-1">
-										<Routes>
-											<Route
-												path="/login"
-												element={
-													<PublicRoute>
-														<Login />
-													</PublicRoute>
-												}
-											/>
-											<Route
-												path="/signup"
-												element={<SignUp />}
-											/>
-											<Route
-												path="/"
-												element={
-													<ProtectedRoute>
-														<Product />
-													</ProtectedRoute>
-												}
-											/>
-											<Route
-												path="/dashboard"
-												element={
-													<ProtectedRoute>
-														<Dashboard />
-													</ProtectedRoute>
-												}
-											/>
-											<Route
-												path="/product"
-												element={
-													<ProtectedRoute>
-														<Product />
-													</ProtectedRoute>
-												}
-											/>
-											<Route
-												path="/accounts"
-												element={
-													<ProtectedRoute>
-														<AccountsManager />
-													</ProtectedRoute>
-												}
-											/>
-										</Routes>
+										<div className="flex-1">
+											<Routes>
+												<Route
+													path="/login"
+													element={
+														<PublicRoute>
+															<Login />
+														</PublicRoute>
+													}
+												/>
+												<Route
+													path="/signup"
+													element={<SignUp />}
+												/>
+												<Route
+													path="/"
+													element={
+														<ProtectedRoute>
+															<Dashboard />
+														</ProtectedRoute>
+													}
+												/>
+												<Route
+													path="/accounts"
+													element={
+														<ProtectedRoute>
+															<AccountsManager />
+														</ProtectedRoute>
+													}
+												/>
+
+												<Route
+													path="/product"
+													element={
+														<ProtectedRoute>
+															<Product />
+														</ProtectedRoute>
+													}
+												/>
+												<Route
+													path="/orders"
+													element={
+														<ProtectedRoute>
+															<Order />
+														</ProtectedRoute>
+													}
+												/>
+											</Routes>
+										</div>
 									</div>
-								</div>
-							</BrowserRouter>
+								</BrowserRouter>
+							</AccountProvider>
 						</UpdateProvider>
 					</ProductProvider>
 				</CategoryProvider>

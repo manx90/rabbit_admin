@@ -21,13 +21,24 @@ export function TableProvider({ children }) {
 	const [data, setData] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
-	const [globalFilter, setGlobalFilter] =
-		useState("");
+	const [globalFilter, setGlobalFilter] = useState("");
+	const [sorting, setSorting] = useState([]);
+	const [pagination, setPagination] = useState({
+		pageIndex: 0,
+		pageSize: 20,
+	});
+	const [columnFilters, setColumnFilters] = useState([]);
+	const [columnResizeMode] = useState("onChange");
+	const [columnResizeDirection] = useState("ltr");
+	const [columnSizing, setColumnSizing] = useState({});
 
 	const fetchProductData = async () => {
 		try {
 			setLoading(true);
-			const response = await Product.getAll();
+			const response = await Product.getAll({
+				limit: pagination.pageSize
+			});
+			console.log('API Response:', response.data);
 			setData(response.data);
 		} catch (error) {
 			setError(error.message);
@@ -38,7 +49,27 @@ export function TableProvider({ children }) {
 
 	useEffect(() => {
 		fetchProductData();
-	}, []);
+	}, [pagination.pageSize]);
+
+	const handlePaginationChange = (updater) => {
+		if (typeof updater === 'function') {
+			setPagination((old) => {
+				const newState = updater(old);
+				// If only pageSize is changing, prevent scroll
+				if (old.pageIndex === newState.pageIndex && old.pageSize !== newState.pageSize) {
+					// Store current scroll position
+					const scrollPosition = window.scrollY;
+					// Update pagination
+					setTimeout(() => {
+						window.scrollTo(0, scrollPosition);
+					}, 0);
+				}
+				return newState;
+			});
+		} else {
+			setPagination(updater);
+		}
+	};
 
 	const columnHelper = createColumnHelper();
 	const columns = [
@@ -57,13 +88,21 @@ export function TableProvider({ children }) {
 			enableResizing: true,
 			size: 200,
 		}),
-		columnHelper.accessor("description", {
-			header: "Description",
-			cell: (info) => info.getValue(),
+		columnHelper.accessor("quantity", {
+			header: "Quantity",
+			cell: (info) => info.getValue() || "0",
 			enableSorting: true,
 			sortingFn: "alphanumeric",
 			enableResizing: true,
-			size: 300,
+			size: 100,
+		}),
+		columnHelper.accessor("poster", {
+			header: "Poster",
+			cell: (info) => info.getValue()?.username || "N/A",
+			enableSorting: true,
+			sortingFn: "alphanumeric",
+			enableResizing: true,
+			size: 150,
 		}),
 		columnHelper.accessor("category", {
 			header: "Category",
@@ -127,18 +166,6 @@ export function TableProvider({ children }) {
 		}),
 	];
 
-	const [sorting, setSorting] = useState([]);
-	const [pagination, setPagination] = useState({
-		pageIndex: 0,
-		pageSize: 10,
-	});
-	const [columnFilters, setColumnFilters] =
-		useState([]);
-	const [columnResizeMode] = useState("onChange");
-	const [columnResizeDirection] = useState("ltr");
-	const [columnSizing, setColumnSizing] =
-		useState({});
-
 	const table = useReactTable({
 		data,
 		columns,
@@ -152,21 +179,21 @@ export function TableProvider({ children }) {
 		onGlobalFilterChange: setGlobalFilter,
 		onColumnFiltersChange: setColumnFilters,
 		onSortingChange: setSorting,
-		onPaginationChange: setPagination,
+		onPaginationChange: handlePaginationChange,
 		onColumnSizingChange: setColumnSizing,
 		getCoreRowModel: getCoreRowModel(),
 		getSortedRowModel: getSortedRowModel(),
 		getFilteredRowModel: getFilteredRowModel(),
-		getPaginationRowModel:
-			getPaginationRowModel(),
+		getPaginationRowModel: getPaginationRowModel(),
 		getFacetedRowModel: getFacetedRowModel(),
-		getFacetedMinMaxValues:
-			getFacetedMinMaxValues(),
-		getFacetedUniqueValues:
-			getFacetedUniqueValues(),
+		getFacetedMinMaxValues: getFacetedMinMaxValues(),
+		getFacetedUniqueValues: getFacetedUniqueValues(),
 		columnResizeMode,
 		columnResizeDirection,
 		enableColumnResizing: true,
+		manualPagination: false,
+		manualSorting: false,
+		manualFiltering: false,
 	});
 
 	if (loading) {
@@ -181,9 +208,7 @@ export function TableProvider({ children }) {
 		return (
 			<div className="flex items-center justify-center min-h-[400px]">
 				<div className="text-red-500 text-center">
-					<p className="text-xl font-semibold">
-						Error loading products
-					</p>
+					<p className="text-xl font-semibold">Error loading products</p>
 					<p className="text-sm">{error}</p>
 				</div>
 			</div>
@@ -194,12 +219,8 @@ export function TableProvider({ children }) {
 		return (
 			<div className="flex items-center justify-center min-h-[400px]">
 				<div className="text-gray-500 text-center">
-					<p className="text-xl font-semibold">
-						No products found
-					</p>
-					<p className="text-sm">
-						Add some products to see them here
-					</p>
+					<p className="text-xl font-semibold">No products found</p>
+					<p className="text-sm">Add some products to see them here</p>
 				</div>
 			</div>
 		);

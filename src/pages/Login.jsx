@@ -23,6 +23,9 @@ export default function Login() {
       localStorage.setItem("token", res.data.data.access_token);
       setIsAuthenticated(true);
       navigate("/product");
+      setTimeout(() => {
+        window.location.reload();
+      }, 100);
     } catch (err) {
       setError(err.response.data.message);
       setLoading(false);
