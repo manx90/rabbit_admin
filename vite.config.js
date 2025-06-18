@@ -31,5 +31,11 @@ export default defineConfig({
 	build: {
 		outDir: "app",
 		emptyOutDir: true,
+		rollupOptions: {
+			output: {
+				manualChunks: undefined,
+			},
+		},
+		copyPublicDir: true,
 	},
 });
