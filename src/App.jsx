@@ -155,7 +155,15 @@ export default function App() {
 											setOpen={setSidebarOpen}
 										/>
 										<div className="flex-1">
-											<Routes>
+											<Routes >
+												<Route
+													path="/"
+													element={
+														<ProtectedRoute>
+															<Navigate to="/dashboard" replace />
+														</ProtectedRoute>
+													}
+												/>
 												<Route
 													path="/login"
 													element={
@@ -169,7 +177,7 @@ export default function App() {
 													element={<SignUp />}
 												/>
 												<Route
-													path="/"
+													path="/Dashboard"
 													element={
 														<ProtectedRoute>
 															<Dashboard />
