@@ -6,7 +6,7 @@ import { useTableProduct } from "../Contexts/TableProduct.context";
 import { flexRender } from "@tanstack/react-table";
 import { useUtiles } from "../Contexts/utils.context";
 
-export default function Table() {
+export default function TableProduct() {
 	const {
 		loading,
 		error,

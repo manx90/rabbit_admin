@@ -24,13 +24,13 @@ export class Optos {
 		);
 	}
 
-	static city() {
+	static getCity() {
 		return axiosClient.get(
 			`${mainDirection}/city`,
 		);
 	}
 
-	static area(cityId) {
+	static gitArea(cityId) {
 		return axiosClient.get(
 			`${mainDirection}/city/${cityId}`,
 		);

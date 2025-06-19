@@ -1,4 +1,4 @@
-import Table from "../components/Table";
+import TableProduct from "../components/TableProduct";
 import { HeaderProduct } from "../components/HeaderProduct";
 import { SubCategory } from "../components/SubCategory";
 import { MainCategory } from "../components/MainCategory";
@@ -82,7 +82,7 @@ export default function Product() {
 					</div>
 					<div className="animate-slideUp">
 						<TableProvider>
-							<Table />
+							<TableProduct />
 						</TableProvider>
 					</div>
 				</div>
