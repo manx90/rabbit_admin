@@ -125,7 +125,9 @@ export default function SaveCancel() {
 					},
 				);
 			}
-
+			if (productInfo.publishState) {
+				formData.append("publishState", productInfo.publishState);
+			}
 			// Add sizes and their quantities
 			if (productInfo.sizeDetails?.length > 0) {
 				productInfo.sizeDetails.forEach(
