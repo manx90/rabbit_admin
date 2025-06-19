@@ -42,17 +42,9 @@ export default function useUsers() {
 		try {
 			setLoading(true);
 			setError(null);
-			console.log(
-				"Creating user with data:",
-				userData,
-			); // Log the user data being sent
 			const response = await Auth.createUser(
 				userData,
 			);
-			console.log(
-				"Create user response:",
-				response,
-			); // Log the create response
 
 			if (!response) {
 				console.error(
@@ -81,26 +73,15 @@ export default function useUsers() {
 			setLoading(true);
 			setError(null);
 			const userForm = { ...user, id: undefined };
-			console.log(
-				"Editing user:",
-				id,
-				"with data:",
-				userForm,
-			); // Log the edit data
+			
 			const response = await Auth.updateUser(
 				id,
 				userForm,
 			);
-			console.log(
-				"Edit user response:",
-				response,
-			); // Log the edit response
+		
 
 			if (!response) {
-				console.error(
-					"Invalid edit response:",
-					response,
-				);
+				
 				setError("Failed to update user");
 				return;
 			}
@@ -118,7 +99,6 @@ export default function useUsers() {
 			setMessage("User updated successfully");
       fetchUsers();
 		} catch (err) {
-			console.error("Error editing user:", err); // Log any errors
 			setError(
 				err.message || "Failed to update user",
 			);
@@ -132,14 +112,10 @@ export default function useUsers() {
 		try {
 			setLoading(true);
 			setError(null);
-			console.log("Removing user:", username); // Log the user being removed
 			const response = await Auth.deleteOne(
 				username,
 			);
-			console.log(
-				"Delete user response:",
-				response,
-			); // Log the delete response
+			
 
 			if (response) {
 				console.error(
@@ -166,7 +142,6 @@ export default function useUsers() {
 
 	// Fetch users on component mount
 	useEffect(() => {
-		console.log("Initial fetch of users"); // Log when the initial fetch happens
 		fetchUsers();
 	}, []);
 

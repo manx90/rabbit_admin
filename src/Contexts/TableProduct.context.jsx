@@ -40,7 +40,6 @@ export function TableProvider({ children }) {
 			const response = await Product.getAll({
 				limit: pagination.pageSize
 			});
-			console.log('API Response:', response.data);
 			setData(response.data);
 		} catch (error) {
 			setError(error.message);
@@ -89,7 +88,7 @@ export function TableProvider({ children }) {
 				if (!imgCover) {
 					return <span className="text-gray-400">No Image</span>;
 				}
-				const url = `https://api.rabbit.ps/uploads/${imgCover}`;
+				const url = `${import.meta.env.VITE_RABBIT_PI_BASE_URL}/uploads/${imgCover}`;
 				return <ImageCellWithModal url={url} />;
 			},
 			enableSorting: false,

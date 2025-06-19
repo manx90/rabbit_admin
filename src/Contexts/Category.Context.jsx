@@ -90,7 +90,6 @@ export function CategoryProvider({ children }) {
 				.then((res) => {
 					setIsLoading2(false);
 					setMainCategoryProduct(res.data);
-					console.log(res.data);
 				})
 				.catch(() => {
 					setIsLoading2(false);

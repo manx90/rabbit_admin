@@ -16,7 +16,8 @@ export function AuthProvider({ children }) {
 	const checkToken = async (token) => {
 		try {
 			const res = await axios.get(
-				"http://api.rabbit.ps/auth/isLoggedIn",
+				import.meta.env
+					.VITE_RABBIT_PI_BASE_URL + "/auth/isLoggedin",
 				{
 					headers: {
 						Authorization: `Bearer ${token}`,
@@ -24,8 +25,8 @@ export function AuthProvider({ children }) {
 					},
 				},
 			);
-			return res.data;
-		} catch {
+			return true
+		} catch (error) {
 			return false;
 		}
 	};
@@ -38,7 +39,7 @@ export function AuthProvider({ children }) {
 			return;
 		}
 		checkToken(token).then((valid) => {
-			if (!valid) {
+			if (valid === false) {
 				setIsAuthenticated(false);
 			} else {
 				setIsAuthenticated(true);

@@ -50,26 +50,18 @@ export const AccountProvider = ({ children }) => {
 
 	// Fetch users on mount
 	useEffect(() => {
-		console.log("Fetching users...");
 		fetchUsers();
 	}, []);
 
 	// Log state changes
 	useEffect(() => {
-		console.log("Users state updated:", users);
 	}, [users]);
 
 	useEffect(() => {
-		console.log("Message state:", message);
 	}, [message]);
 
 	const handleChange = (e) => {
 		const { name, value } = e.target;
-		console.log(
-			"Form field changed:",
-			name,
-			value,
-		);
 		setForm((prev) => ({
 			...prev,
 			[name]: value,
@@ -78,7 +70,6 @@ export const AccountProvider = ({ children }) => {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		console.log("Submitting form:", form);
 		await createUser(form);
 		setForm({
 			username: "",
@@ -88,10 +79,7 @@ export const AccountProvider = ({ children }) => {
 	};
 
 	const handleEdit = (user) => {
-		console.log(
-			"Opening edit modal for user:",
-			user,
-		);
+		
 		setEditModal({
 			isOpen: true,
 			user: { ...user },
@@ -100,10 +88,7 @@ export const AccountProvider = ({ children }) => {
 
 	const handleEditSubmit = async (e) => {
 		e.preventDefault();
-		console.log(
-			"Submitting edit for user:",
-			editModal.user,
-		);
+		
 		await editUser(
 			editModal.user.id,
 			editModal.user,
@@ -112,10 +97,7 @@ export const AccountProvider = ({ children }) => {
 	};
 
 	const handleDelete = (username) => {
-		console.log(
-			"Opening delete modal for user:",
-			username,
-		);
+		
 		setDeleteModal({
 			isOpen: true,
 			username,
@@ -123,16 +105,12 @@ export const AccountProvider = ({ children }) => {
 	};
 
 	const confirmDelete = async () => {
-		console.log(
-			"Confirming delete for user:",
-			deleteModal.username,
-		);
+	
 		await removeUser(deleteModal.username);
 		closeDeleteModal();
 	};
 
 	const closeEditModal = () => {
-		console.log("Closing edit modal");
 		setEditModal({
 			isOpen: false,
 			user: null,
@@ -140,7 +118,6 @@ export const AccountProvider = ({ children }) => {
 	};
 
 	const closeDeleteModal = () => {
-		console.log("Closing delete modal");
 		setDeleteModal({
 			isOpen: false,
 			username: null,
@@ -150,7 +127,6 @@ export const AccountProvider = ({ children }) => {
 	// Safe filtering with null checks
 	const filteredUsers =
 		users?.filter((user) => {
-			// console.log("Filtering user:", user); // Debug log
 			if (!user) return false;
 			const username = user.username || user.name; // Try both username and name fields
 			if (!username) return false;
@@ -159,7 +135,6 @@ export const AccountProvider = ({ children }) => {
 				.includes(filter.toLowerCase());
 		}) || [];
 
-	// console.log("Filtered users:", filteredUsers);
 
 	const value = {
 		loading,

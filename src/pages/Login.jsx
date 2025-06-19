@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../Contexts/Auth.context";
+import { Auth } from "../api/authApi";
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -14,20 +15,18 @@ export default function Login() {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await axios.post("http://api.rabbit.ps/auth/login", {
-        username,
-        password,
-      });
+    const res = await Auth.login({username,password})
       setSuccess(res.data.message);
       setLoading(false);
-      localStorage.setItem("token", res.data.data.access_token);
+      localStorage.setItem("token", res.data.access_token);
       setIsAuthenticated(true);
       navigate("/product");
       setTimeout(() => {
         window.location.reload();
       }, 100);
     } catch (err) {
-      setError(err.response.data.message);
+      console.log('Login error:', err);
+      setError(err?.message || (typeof err === 'string' ? err : 'Login failed'));
       setLoading(false);
     }
   };
