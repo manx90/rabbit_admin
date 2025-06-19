@@ -52,7 +52,7 @@ export function UploadImageColors({
 									type="button"
 									onClick={() =>
 										dispatchProductInfo({
-											type: "REMOVE_COLOR_WITH_IMAGE",
+											type: "REMOVE_IMAGE_FOR_COLORS",
 											payload: { index },
 										})
 									}

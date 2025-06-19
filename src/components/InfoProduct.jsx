@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Description from "./textarea";
 import InputSimple from "./ui/inputSimple";
 import SelectButton from "./ui/selecting";
-import GroupRadio from "./ui/GroupRadio";
+// import GroupRadio from "./ui/GroupRadio";
 export function InfoProduct({
 	styleProduct,
 	MainCategoryProduct,
@@ -135,7 +135,7 @@ export function InfoProduct({
 					}}
 					value={ProductInfo?.description || ""}
 				/>
-				<GroupRadio
+				{/* <GroupRadio
 					className="w-full h-[48px] text-[16px] font-medium flex-row cursor-pointer"
 					label="Product Status"
 					options={[
@@ -151,7 +151,7 @@ export function InfoProduct({
 						});
 					}}
 					value={ProductInfo?.active || ""}
-				/>
+				/> */}
 			</div>
 		</div>
 	);

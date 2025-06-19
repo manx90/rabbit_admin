@@ -15,6 +15,8 @@ import {
 	getFacetedRowModel,
 	getFacetedMinMaxValues,
 } from "@tanstack/react-table";
+import ImageCellWithModal from "../components/ImageCellWithModal";
+
 const TableProductContext = createContext();
 
 export function TableProvider({ children }) {
@@ -74,9 +76,23 @@ export function TableProvider({ children }) {
 	const columnHelper = createColumnHelper();
 	const columns = [
 		columnHelper.accessor("id", {
-			header: "#",
+			header: "id",
 			cell: (info) => info.getValue(),
 			enableSorting: true,
+			enableResizing: true,
+			size: 80,
+		}),
+		columnHelper.accessor("imgCover", {
+			header: "imgCover",
+			cell: (info) => {
+				const imgCover = info.getValue();
+				if (!imgCover) {
+					return <span className="text-gray-400">No Image</span>;
+				}
+				const url = `https://api.rabbit.ps/uploads/${imgCover}`;
+				return <ImageCellWithModal url={url} />;
+			},
+			enableSorting: false,
 			enableResizing: true,
 			size: 80,
 		}),

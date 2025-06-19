@@ -141,7 +141,7 @@ export function ColorWithSizes({
                 )}
               </div>
             ))}
-            <button
+            {/* <button
               type="button"
               onClick={() => {
                 dispatchProductInfo({
@@ -155,7 +155,7 @@ export function ColorWithSizes({
               className={`${styleProduct.button} mt-2 hover:bg-blue-500 hover:text-white transition-all duration-500 ease-in-out  px-4 py-2 rounded-lg cursor-pointer`}
             >
               Add Color & Quantity
-            </button>
+            </button> */}
           </div>
         </div>
       ))}

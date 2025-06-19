@@ -36,7 +36,8 @@ const initialState = {
 	imgCover: null,
 	imgMeasurement: null,
 	imgChart: null,
-	isActive: true,
+	publishState: "published",
+	resetKey: Date.now(),
 };
 
 export function ProductProvider({ children }) {
@@ -46,11 +47,9 @@ export function ProductProvider({ children }) {
 		setMessage,
 		Message,
 	} = useUtiles();
-
 	const [productInfo, dispatchProductInfo] =
 		useReducer(
 			// Reducer function
-
 			(state, action) => {
 				let newState;
 				switch (action.type) {
@@ -81,43 +80,71 @@ export function ProductProvider({ children }) {
 						break;
 					case "ADD_COLOR_WITH_IMAGE":
 						if (!action.payload) {
+							// Add a new color and add its name to all sizeDetails quantities
+							const newColor = { name: "", imgColor: null };
 							return {
 								...state,
-								colors: [
-									...state.colors,
-									{
-										name: "",
-										imgColor: null,
-									},
-								],
+								colors: [...state.colors, newColor],
+								sizeDetails: state.sizeDetails.map((size) => ({
+									...size,
+									quantities: [
+										...size.quantities,
+										{ colorName: "", quantity: "" },
+									],
+								})),
 							};
 						}
+						// Update color name or image, and sync color names in quantities by index
+						const updatedColors = state.colors.map(
+							(item, index) =>
+								index === action.payload.index
+									? {
+											...item,
+											name: action.payload.name ?? item.name,
+											imgColor: action.payload.imgColor ?? item.imgColor,
+										}
+									: item
+						);
+						// Only update the quantity at the same index as the color
+						let updatedSizeDetails = state.sizeDetails.map((size) => {
+							return {
+								...size,
+								quantities: size.quantities.map((q, qIdx) => {
+									if (qIdx === action.payload.index && action.payload.name !== undefined) {
+										return {
+											...q,
+											colorName: action.payload.name,
+										};
+									}
+									return q;
+								}),
+							};
+						});
 						return {
 							...state,
-							colors: state.colors.map(
-								(item, index) =>
-									index === action.payload.index
-										? {
-												...item,
-												name:
-													action.payload.name ??
-													item.name,
-												imgColor:
-													action.payload
-														.imgColor ??
-													item.imgColor,
-										  }
-										: item,
-							),
+							colors: updatedColors,
+							sizeDetails: updatedSizeDetails,
 						};
 					case "REMOVE_COLOR_WITH_IMAGE":
 						return {
 							...state,
-							colors: state.colors.filter(
-								(_, index) =>
-									index !== action.payload.index,
-							),
+							colors: state.colors.filter((_, index) => index !== action.payload.index),
+							sizeDetails: state.sizeDetails.map((size) => ({
+								...size,
+								quantities: size.quantities.filter(
+									(q) => q.colorName !== state.colors[action.payload.index].name
+								),
+							})),
 						};
+						case "REMOVE_IMAGE_FOR_COLORS":
+							return {
+								...state,
+								colors: state.colors.map((color, index) =>
+									index === action.payload.index
+										? { ...color, imgColor: null }
+										: color
+								),
+							};
 					case "ADD_SIZE_PRICE":
 						return {
 							...state,
@@ -232,7 +259,10 @@ export function ProductProvider({ children }) {
 							imgChart: action.payload,
 						};
 					case "RESET_FORM":
-						return initialState;
+						return {
+							...initialState,
+							resetKey: Date.now(),
+						};
 					case "REMOVE_COLOR_QUANTITY":
 						return {
 							...state,
@@ -261,12 +291,10 @@ export function ProductProvider({ children }) {
 								{
 									sizeName: "",
 									price: null,
-									quantities: [
-										{
-											colorName: "",
-											quantity: null,
-										},
-									],
+									quantities: state.colors.map(color => ({
+										colorName: color.name,
+										quantity: "",
+									})),
 								},
 							],
 						};

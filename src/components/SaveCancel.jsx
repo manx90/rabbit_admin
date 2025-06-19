@@ -61,15 +61,6 @@ export default function SaveCancel() {
 						sub.id === productInfo.subcategoryId,
 				);
 
-			console.log(
-				"Selected category:",
-				selectedCategory,
-			);
-			console.log(
-				"Selected subcategory:",
-				selectedSubCategory,
-			);
-
 			if (selectedCategory) {
 				formData.append(
 					"categoryId",
@@ -109,7 +100,6 @@ export default function SaveCancel() {
 					}
 				});
 			}
-
 			// Add measurement image
 			if (productInfo.imgMeasurement) {
 				formData.append(
@@ -117,7 +107,6 @@ export default function SaveCancel() {
 					productInfo.imgMeasurement,
 				);
 			}
-
 			// Add chart image
 			if (productInfo.imgChart) {
 				formData.append(
@@ -125,7 +114,6 @@ export default function SaveCancel() {
 					productInfo.imgChart,
 				);
 			}
-
 			// Add colors and their names
 			if (productInfo.colors?.length > 0) {
 				productInfo.colors.forEach(
@@ -170,7 +158,6 @@ export default function SaveCancel() {
 			}
 
 			// Log the form data before sending
-			console.log("Form data being sent:");
 			for (let pair of formData.entries()) {
 				console.log(pair[0] + ": " + pair[1]);
 			}
@@ -182,7 +169,6 @@ export default function SaveCancel() {
 			if (!response) {
 				throw new Error("Failed to save product");
 			}
-
 			// Show success message
 			setMessage({
 				type: "success",
@@ -190,7 +176,6 @@ export default function SaveCancel() {
 					response.message ||
 					"Product saved successfully!",
 			});
-
 			// Reset the form after successful submission
 			dispatchProductInfo({ type: "RESET_FORM" });
 		} catch (error) {

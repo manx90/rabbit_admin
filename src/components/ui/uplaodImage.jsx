@@ -58,7 +58,6 @@ export default function UplaodImages({
 					aria-label="Upload image file"
 					onChange={(e) => {
 						const images = e.target.files;
-						console.log(images);
 						if (images && images.length > 0) {
 							if (type === "SET_IMG_COVER") {
 								dispatchProductInfo({
@@ -125,11 +124,13 @@ export default function UplaodImages({
 									key={file.id}
 									className="bg-accent relative aspect-square rounded-md"
 								>
-									<img
-										src={file.preview}
-										alt={file.file.name}
-										className="rounded-[inherit] object-contain"
-									/>
+									<div className="w-48 h-48 flex items-center justify-center mx-auto">
+										<img
+											src={file.preview}
+											alt={file.file.name}
+											className="object-contain w-full h-full max-w-full max-h-full rounded-[inherit]"
+										/>
+									</div>
 									<Button
 										onClick={() =>
 											removeFile(file.id)

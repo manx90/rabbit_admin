@@ -172,25 +172,25 @@ export default function Table() {
 										>
 											{row
 												.getVisibleCells()
-												.map((cell) => (
-													<td
-														key={cell.id}
-														onClick={() => {
-															setUpdateId(
-																row.getValue("id"),
-															);
-															setIsUpdate(true);
-														}}
-														className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 cursor-pointer"
-														style={{ width: cell.column.getSize() }}
-													>
-														{flexRender(
-															cell.column
-																.columnDef.cell,
-															cell.getContext(),
-														)}
-													</td>
-												))}
+												.map((cell) => {
+													const isNameCell = cell.column.id === "name";
+													return (
+														<td
+															key={cell.id}
+															onClick={isNameCell ? () => {
+																setUpdateId(row.getValue("id"));
+																setIsUpdate(true);
+															} : undefined}
+															className={`px-6 py-4 whitespace-nowrap text-sm text-center text-gray-600 ${isNameCell ? "cursor-pointer hover:text-blue-600" : ""}`}
+															style={{ width: cell.column.getSize() }}
+														>
+															{flexRender(
+																cell.column.columnDef.cell,
+																cell.getContext(),
+															)}
+														</td>
+													);
+												})}
 											<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
 												<div className="flex items-center space-x-3">
 													<button
