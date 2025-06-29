@@ -81,45 +81,70 @@ export function ProductProvider({ children }) {
 					case "ADD_COLOR_WITH_IMAGE":
 						if (!action.payload) {
 							// Add a new color and add its name to all sizeDetails quantities
-							const newColor = { name: "", imgColor: null };
+							const newColor = {
+								name: "",
+								imgColor: null,
+							};
 							return {
 								...state,
-								colors: [...state.colors, newColor],
-								sizeDetails: state.sizeDetails.map((size) => ({
-									...size,
-									quantities: [
-										...size.quantities,
-										{ colorName: "", quantity: "" },
-									],
-								})),
+								colors: [
+									...state.colors,
+									newColor,
+								],
+								sizeDetails:
+									state.sizeDetails.map(
+										(size) => ({
+											...size,
+											quantities: [
+												...size.quantities,
+												{
+													colorName: "",
+													quantity: "",
+												},
+											],
+										}),
+									),
 							};
 						}
 						// Update color name or image, and sync color names in quantities by index
-						const updatedColors = state.colors.map(
-							(item, index) =>
+						const updatedColors =
+							state.colors.map((item, index) =>
 								index === action.payload.index
 									? {
 											...item,
-											name: action.payload.name ?? item.name,
-											imgColor: action.payload.imgColor ?? item.imgColor,
-										}
-									: item
-						);
+											name:
+												action.payload.name ??
+												item.name,
+											imgColor:
+												action.payload.imgColor ??
+												item.imgColor,
+									  }
+									: item,
+							);
 						// Only update the quantity at the same index as the color
-						let updatedSizeDetails = state.sizeDetails.map((size) => {
-							return {
-								...size,
-								quantities: size.quantities.map((q, qIdx) => {
-									if (qIdx === action.payload.index && action.payload.name !== undefined) {
-										return {
-											...q,
-											colorName: action.payload.name,
-										};
-									}
-									return q;
-								}),
-							};
-						});
+						let updatedSizeDetails =
+							state.sizeDetails.map((size) => {
+								return {
+									...size,
+									quantities: size.quantities.map(
+										(q, qIdx) => {
+											if (
+												qIdx ===
+													action.payload.index &&
+												action.payload.name !==
+													undefined
+											) {
+												return {
+													...q,
+													colorName:
+														action.payload.name,
+												};
+											}
+											return q;
+										},
+									),
+								};
+							});
 						return {
 							...state,
 							colors: updatedColors,
@@ -128,23 +153,34 @@ export function ProductProvider({ children }) {
 					case "REMOVE_COLOR_WITH_IMAGE":
 						return {
 							...state,
-							colors: state.colors.filter((_, index) => index !== action.payload.index),
-							sizeDetails: state.sizeDetails.map((size) => ({
-								...size,
-								quantities: size.quantities.filter(
-									(q) => q.colorName !== state.colors[action.payload.index].name
-								),
-							})),
+							colors: state.colors.filter(
+								(_, index) =>
+									index !== action.payload.index,
+							),
+							sizeDetails: state.sizeDetails.map(
+								(size) => ({
+									...size,
+									quantities:
+										size.quantities.filter(
+											(q) =>
+												q.colorName !==
+												state.colors[
+													action.payload.index
+												].name,
+										),
+								}),
+							),
 						};
-						case "REMOVE_IMAGE_FOR_COLORS":
-							return {
-								...state,
-								colors: state.colors.map((color, index) =>
+					case "REMOVE_IMAGE_FOR_COLORS":
+						return {
+							...state,
+							colors: state.colors.map(
+								(color, index) =>
 									index === action.payload.index
 										? { ...color, imgColor: null }
-										: color
-								),
-							};
+										: color,
+							),
+						};
 					case "ADD_SIZE_PRICE":
 						return {
 							...state,
@@ -291,10 +327,12 @@ export function ProductProvider({ children }) {
 								{
 									sizeName: "",
 									price: null,
-									quantities: state.colors.map(color => ({
-										colorName: color.name,
-										quantity: "",
-									})),
+									quantities: state.colors.map(
+										(color) => ({
+											colorName: color.name,
+											quantity: "",
+										}),
+									),
 								},
 							],
 						};
@@ -327,7 +365,8 @@ export function ProductProvider({ children }) {
 
 	// update id
 	useEffect(() => {
-		if (updateId === "" || isUpdate === false) return;
+		if (updateId === "" || isUpdate === false)
+			return;
 		const getProduct = async () => {
 			setIsLoading1(true);
 			try {
