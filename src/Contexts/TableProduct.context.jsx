@@ -23,22 +23,26 @@ export function TableProvider({ children }) {
 	const [data, setData] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
-	const [globalFilter, setGlobalFilter] = useState("");
+	const [globalFilter, setGlobalFilter] =
+		useState("");
 	const [sorting, setSorting] = useState([]);
 	const [pagination, setPagination] = useState({
 		pageIndex: 0,
 		pageSize: 20,
+		
 	});
-	const [columnFilters, setColumnFilters] = useState([]);
+	const [columnFilters, setColumnFilters] =
+		useState([]);
 	const [columnResizeMode] = useState("onChange");
 	const [columnResizeDirection] = useState("ltr");
-	const [columnSizing, setColumnSizing] = useState({});
+	const [columnSizing, setColumnSizing] =
+		useState({});
 
 	const fetchProductData = async () => {
 		try {
 			setLoading(true);
 			const response = await Product.getAll({
-				limit: pagination.pageSize
+				limit: pagination.pageSize,
 			});
 			setData(response.data);
 		} catch (error) {
@@ -53,11 +57,14 @@ export function TableProvider({ children }) {
 	}, [pagination.pageSize]);
 
 	const handlePaginationChange = (updater) => {
-		if (typeof updater === 'function') {
+		if (typeof updater === "function") {
 			setPagination((old) => {
 				const newState = updater(old);
 				// If only pageSize is changing, prevent scroll
-				if (old.pageIndex === newState.pageIndex && old.pageSize !== newState.pageSize) {
+				if (
+					old.pageIndex === newState.pageIndex &&
+					old.pageSize !== newState.pageSize
+				) {
 					// Store current scroll position
 					const scrollPosition = window.scrollY;
 					// Update pagination
@@ -86,9 +93,15 @@ export function TableProvider({ children }) {
 			cell: (info) => {
 				const imgCover = info.getValue();
 				if (!imgCover) {
-					return <span className="text-gray-400">No Image</span>;
+					return (
+						<span className="text-gray-400">
+							No Image
+						</span>
+					);
 				}
-				const url = `${import.meta.env.VITE_RABBIT_PI_BASE_URL}/uploads/${imgCover}`;
+				const url = `${
+					import.meta.env.VITE_RABBIT_PI_BASE_URL
+				}/uploads/${imgCover}`;
 				return <ImageCellWithModal url={url} />;
 			},
 			enableSorting: false,
@@ -113,7 +126,8 @@ export function TableProvider({ children }) {
 		}),
 		columnHelper.accessor("poster", {
 			header: "Poster",
-			cell: (info) => info.getValue()?.username || "N/A",
+			cell: (info) =>
+				info.getValue()?.username || "N/A",
 			enableSorting: true,
 			sortingFn: "alphanumeric",
 			enableResizing: true,
@@ -199,10 +213,13 @@ export function TableProvider({ children }) {
 		getCoreRowModel: getCoreRowModel(),
 		getSortedRowModel: getSortedRowModel(),
 		getFilteredRowModel: getFilteredRowModel(),
-		getPaginationRowModel: getPaginationRowModel(),
+		getPaginationRowModel:
+			getPaginationRowModel(),
 		getFacetedRowModel: getFacetedRowModel(),
-		getFacetedMinMaxValues: getFacetedMinMaxValues(),
-		getFacetedUniqueValues: getFacetedUniqueValues(),
+		getFacetedMinMaxValues:
+			getFacetedMinMaxValues(),
+		getFacetedUniqueValues:
+			getFacetedUniqueValues(),
 		columnResizeMode,
 		columnResizeDirection,
 		enableColumnResizing: true,
@@ -223,7 +240,9 @@ export function TableProvider({ children }) {
 		return (
 			<div className="flex items-center justify-center min-h-[400px]">
 				<div className="text-red-500 text-center">
-					<p className="text-xl font-semibold">Error loading products</p>
+					<p className="text-xl font-semibold">
+						Error loading products
+					</p>
 					<p className="text-sm">{error}</p>
 				</div>
 			</div>
@@ -234,8 +253,12 @@ export function TableProvider({ children }) {
 		return (
 			<div className="flex items-center justify-center min-h-[400px]">
 				<div className="text-gray-500 text-center">
-					<p className="text-xl font-semibold">No products found</p>
-					<p className="text-sm">Add some products to see them here</p>
+					<p className="text-xl font-semibold">
+						No products found
+					</p>
+					<p className="text-sm">
+						Add some products to see them here
+					</p>
 				</div>
 			</div>
 		);

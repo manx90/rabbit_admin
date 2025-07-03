@@ -41,7 +41,9 @@ export default function Product() {
 							borderColor="border-red-500"
 							type="SET_IMG_COVER"
 							productInfo={productInfo}
-							key={productInfo.resetKey + '-imgCover'}
+							key={
+								productInfo.resetKey + "-imgCover"
+							}
 						/>
 						<UploadImages
 							name="imgs"
@@ -49,7 +51,7 @@ export default function Product() {
 							borderColor="border-blue-500"
 							type="SET_IMGS"
 							productInfo={productInfo}
-							key={productInfo.resetKey + '-imgs'}
+							key={productInfo.resetKey + "-imgs"}
 						/>
 						<UploadImages
 							name="imgMeasurement"
@@ -57,7 +59,10 @@ export default function Product() {
 							borderColor="border-green-500"
 							type="SET_IMG_MEASUREMENT"
 							productInfo={productInfo}
-							key={productInfo.resetKey + '-imgMeasurement'}
+							key={
+								productInfo.resetKey +
+								"-imgMeasurement"
+							}
 						/>
 						<UploadImages
 							name="imgSize"
@@ -65,7 +70,9 @@ export default function Product() {
 							borderColor="border-yellow-500"
 							type="SET_IMG_CHART"
 							productInfo={productInfo}
-							key={productInfo.resetKey + '-imgSize'}
+							key={
+								productInfo.resetKey + "-imgSize"
+							}
 						/>
 					</div>
 					<div className="animate-slideUp">

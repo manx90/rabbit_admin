@@ -8,7 +8,7 @@ export class Product {
 		try {
 			const response = await axiosClient.get(
 				mainDirection,
-				{ params }
+				{ params },
 			);
 			return response;
 		} catch (error) {
