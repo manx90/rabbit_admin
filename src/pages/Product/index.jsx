@@ -754,17 +754,6 @@ const Product = ({ categories }) => {
 											  )
 											: ""
 									}
-									onChange={(e) => {
-										const value = e.target.value;
-										setValue(
-											"wordkey",
-											value
-												.split(",")
-												.map((word) =>
-													word.trim(),
-												),
-										);
-									}}
 								/>
 							</Column>
 							<Column className="w-full  dark:border-gray-600 pt-4">
