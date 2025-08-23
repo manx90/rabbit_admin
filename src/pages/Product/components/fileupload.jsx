@@ -52,7 +52,6 @@ export default function FileUpload({
 			}
 		});
 		setValue(registerName, fileList.files);
-		console.log("files", fileList.files);
 	}, [files, setValue, registerName, maxFiles]);
 
 	return (

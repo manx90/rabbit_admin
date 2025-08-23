@@ -9,8 +9,6 @@ import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 
 import { Badge } from "@/components/ui/badge";
-import { Checkbox } from "@/components/ui/checkbox";
-import { useFormContext } from "react-hook-form";
 import {
 	Table as TableUI,
 	TableBody,
@@ -19,9 +17,8 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import { useQuery } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
-import { Product } from "../../../api/productApi";
+import { Product } from "../../../api/productAPI";
 import { SelectNative } from "@/components/ui/select-native";
 export function TableProduct({
 	checkbox = true,
@@ -32,27 +29,15 @@ export function TableProduct({
 	setLimit,
 	refetch,
 	isLoading,
-	setValues,
 	onEditProduct,
 }) {
-	const [selectedProducts, setSelectedProducts] =
-		useState([]);
 	const [
 		openConfirmDelete,
 		setOpenConfirmDelete,
 	] = useState(false);
 	const [idConfirmDelete, setIdConfirmDelete] =
 		useState(null);
-	let setValue = null;
-	let reset = null;
-	try {
-		const formContext = useFormContext();
-		setValue = formContext?.setValue;
-		reset = formContext?.reset;
-	} catch (error) {
-		setValue = null;
-		reset = null;
-	}
+
 	const handleDelete = (id) => {
 		Product.deleteOne(id);
 		setOpenConfirmDelete(false);
@@ -69,17 +54,6 @@ export function TableProduct({
 		setLimit,
 		handleDelete,
 	]);
-
-	console.log(data);
-
-	const allProducts = data?.data || [];
-	const isAllSelected =
-		allProducts.length > 0 &&
-		selectedProducts.length ===
-			allProducts.length;
-	const isSomeSelected =
-		selectedProducts.length > 0 &&
-		selectedProducts.length < allProducts.length;
 
 	return (
 		<Section className="w-full border-2 border-gray-300 rounded-md max-h-[600px] flex flex-col">
