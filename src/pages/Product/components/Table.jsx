@@ -77,7 +77,6 @@ export function TableProduct({
 								className="text-white bg-gray-700"
 								value=""
 								disabled
-								selected
 							>
 								select limit
 							</option>

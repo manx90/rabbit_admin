@@ -163,7 +163,6 @@ export function TableOne({
 								className="text-white bg-gray-700"
 								value=""
 								disabled
-								selected
 							>
 								select limit
 							</option>

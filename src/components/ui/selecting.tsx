@@ -50,7 +50,6 @@ export default function SelectButton({
 					<option
 						key={item.id}
 						value={item.id}
-						selected={value === item.id}
 						className={cnOption}
 					>
 						{item.category || item.name}
