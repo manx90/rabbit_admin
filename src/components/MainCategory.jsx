@@ -11,14 +11,14 @@ export function MainCategory() {
 	} = useCategory();
 	if (isLoading1) {
 		return (
-			<div className="flex items-center justify-center p-[12px] rounded-2xl bg-gray-50">
+			<div className="flex items-center justify-center p-[12px] rounded-2xl bg-gray-50 dark:bg-gray-800">
 				<div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-500"></div>
 			</div>
 		);
 	}
 
 	return (
-		<div className="w-full bg-white rounded-2xl p-[12px] border">
+		<div className="w-full bg-white dark:bg-gray-800 rounded-2xl p-[12px] border dark:border-gray-700">
 			<div className="flex flex-row  justify-between gap-10 w-full">
 				<div className="flex flex-col gap-2 w-full">
 					<InputWithButton
@@ -29,13 +29,12 @@ export function MainCategory() {
 						onChange={(e) =>
 							setMainCategory(e.target.value)
 						}
-						cnLabel="text-[16px] font-medium"
+						cnLabel="text-[16px] font-medium dark:text-gray-400"
 						onClick={() => {
 							setAddCategory(MainCategory);
 						}}
-						cnButton="md:w-64 w-full h-12  text-[16px] self-end md:font-medium font-medium bg-[#0095FF] text-white cursor-pointer animate-slideUp "
+						cnButton="md:w-64 w-full h-12 text-[16px] self-end md:font-medium font-medium bg-[#0095FF] text-white cursor-pointer animate-slideUp dark:bg-[#0095FF] dark:text-white dark:hover:bg-[#0095FF]/80"
 						required
-						// value={mainCategory}
 						button="Add Main Category"
 						label="MainCategory"
 					/>

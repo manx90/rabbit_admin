@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Arvo:ital,wght@0,400;0,700;1,400;1,700&family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Lemonada:wght@300..700&family=Noto+Kufi+Arabic:wght@100..900&family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Quicksand:wght@300..700&family=Roboto+Slab:wght@100..900&family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&family=Space+Grotesk:wght@300..700&family=Ysabeau+SC&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Arvo:ital,wght@0,400;0,700;1,400;1,700&family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Lemonada:wght@300..700&family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&family=Noto+Kufi+Arabic&family=Noto+Serif:ital,wght@0,100..900;1,100..900&family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Quicksand:wght@300..700&family=Roboto+Slab:wght@100..900&family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&family=Space+Grotesk:wght@300..700&family=Ysabeau+SC&display=swap");
 
 @import "tailwindcss";
 
@@ -8,8 +8,14 @@
 	--font-poppins: "Poppins", sans-serif;
 	--font-Noto: "Noto Kufi Arabic", sans-serif;
 }
-html, body ,* {
+html,
+body,
+* {
 	font-family: "Noto Kufi Arabic", sans-serif;
+}
+
+body {
+	@apply bg-gray-100 font-Noto dark:bg-gray-900;
 }
 * {
 	/* transition: all 0.2s linear; */
@@ -147,10 +153,8 @@ html, body ,* {
 }
 @import "tailwindcss";
 
-
-
 * {
-	@apply font-Noto
+	@apply font-Noto;
 }
 .Sidebar-Button {
 	@apply flex text-white gap-3 font-poppins text-2xl hover:bg-[#202020] p-4 rounded-3xl;
@@ -161,10 +165,10 @@ html, body ,* {
 }
 
 .ContentPage {
-	@apply relative flex flex-col max-w-full mt-20 md:py-[40px] py-[20px] gap-[40px] px-[5px] md:px-[60px] bg-[#F9F9F9] min-h-[calc(100vh-5rem)] overflow-y-auto transition-all duration-300 ease-in-out;
+	@apply relative max-w-full mt-16 md:py-[40px] py-[20px] px-[5px] md:px-[60px]  text-black dark:text-white bg-gray-100 dark:bg-gray-900  overflow-y-auto transition-all duration-300 ease-in-out;
 }
 * {
-	@apply font-poppins;
+	@apply font-Noto;
 }
 
 .Inputs {
@@ -175,5 +179,6 @@ html, body ,* {
 	@apply mx-auto hover:scale-105 transition duration-200 ease-in-out w-full border-t border-r border-l  rounded p-[12px];
 }
 
-
-
+.badge-dot-lamp {
+	/* box-shadow and animation are now set inline for dynamic color */
+}

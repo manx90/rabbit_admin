@@ -50,7 +50,7 @@ export default function UplaodImages({
 				onDrop={handleDrop}
 				data-dragging={isDragging || undefined}
 				data-files={files.length > 0 || undefined}
-				className={`data-[dragging=true]:bg-accent/50 has-[input:focus]:border-ring has-[input:focus]:ring-ring/50 relative flex min-h-52 flex-col items-center overflow-hidden rounded-xl border-2 p-4 ${borderColor} transition-colors not-data-[files]:justify-center has-[input:focus]:ring-[3px]`}
+				className={`data-[dragging=true]:bg-accent/50 dark:data-[dragging=true]:bg-accent/20 has-[input:focus]:border-ring has-[input:focus]:ring-ring/50 relative flex min-h-52 flex-col items-center overflow-hidden rounded-xl border-2 p-4 ${borderColor} dark:border-gray-600 transition-colors not-data-[files]:justify-center has-[input:focus]:ring-[3px] dark:bg-gray-800`}
 			>
 				<input
 					{...getInputProps()}

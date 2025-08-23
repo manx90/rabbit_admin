@@ -13,7 +13,7 @@ export function Products() {
 	} = useProduct();
 	const { mainCategoryProduct } = useCategory();
 	return (
-		<div>
+		<div className="dark:bg-gray-900">
 			<div className={styleProduct.level1}>
 				<InfoProduct
 					styleProduct={styleProduct}

@@ -8,7 +8,14 @@ export class Product {
 		try {
 			const response = await axiosClient.get(
 				mainDirection,
-				{ params },
+				{
+					params: {
+						q: params.q,
+						category: params.category,
+						subcategory: params.subcategory,
+						limit: params.limit,
+					},
+				},
 			);
 			return response;
 		} catch (error) {
@@ -32,11 +39,6 @@ export class Product {
 			const response = await axiosClient.post(
 				mainDirection,
 				formData,
-				{
-					headers: {
-						"Content-Type": "multipart/form-data",
-					},
-				},
 			);
 			return response;
 		} catch (error) {

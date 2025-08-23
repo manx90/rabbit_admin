@@ -195,7 +195,6 @@ function MostFrequent() {
 						<span>30 NIS</span>
 					</div>
 				</div>
-				
 			</div>
 		</div>
 	);

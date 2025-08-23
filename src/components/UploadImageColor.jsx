@@ -1,4 +1,3 @@
-
 export function UploadImageColors({
 	styleProduct,
 	ProductInfo,
@@ -33,7 +32,7 @@ export function UploadImageColors({
 			{ProductInfo.colors.map((color, index) => (
 				<div
 					key={index}
-					className="flex-wrap md:flex items-center gap-2 border md:border-none p-2 rounded-xl"
+					className="flex-wrap md:flex items-center gap-2 border md:border-none p-2 rounded-xl dark:border-gray-700 dark:bg-gray-800"
 					id="productImage"
 				>
 					<div className="flex gap-2 items-center">
@@ -41,11 +40,9 @@ export function UploadImageColors({
 							{!isUpdate && color.imgColor ? (
 								<div className="relative my-auto">
 									<img
-										src={
-											URL.createObjectURL(
-												color.imgColor
-											)
-										}
+										src={URL.createObjectURL(
+											color.imgColor,
+										)}
 										alt={`Color ${index + 1}`}
 										className="h-14 w-24 object-cover rounded-lg my-auto"
 									/>
@@ -76,7 +73,7 @@ export function UploadImageColors({
 							) : (
 								<label
 									htmlFor={`productImage_${index}`}
-									className={`${styleProduct.label_productImage} cursor-pointer flex flex-col items-center justify-center w-28 h-14 border-2 border-gray-300 rounded-lg`}
+									className={`${styleProduct.label_productImage} cursor-pointer flex flex-col items-center justify-center w-28 h-14 border-2 border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700`}
 								>
 									<span className="text-sm text-gray-500 text-center">
 										Upload Image
@@ -95,13 +92,17 @@ export function UploadImageColors({
 						</div>
 						<input
 							type="text"
-							className="w-full sm:w-60 border border-gray-300 py-4 px-2 sm:p-4 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 rounded-lg text-sm sm:text-base"
+							className="w-full sm:w-60 border border-gray-300 dark:border-gray-600 py-4 px-2 sm:p-4 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 rounded-lg text-sm sm:text-base dark:bg-gray-700 dark:text-white"
 							name="name"
-							placeholder={`Enter color name ${index + 1}`}
+							placeholder={`Enter color name ${
+								index + 1
+							}`}
 							onChange={(e) => {
 								handleColorNameChange(e, index);
 							}}
-							value={ProductInfo.colors[index].name}
+							value={
+								ProductInfo.colors[index].name
+							}
 						/>
 					</div>
 					<button
@@ -112,7 +113,7 @@ export function UploadImageColors({
 								payload: { index },
 							})
 						}
-						className="cursor-pointer text-red-600 hover:text-red-800 font-semibold transition-colors duration-200 bg-gray-100 hover:bg-gray-200 rounded-lg px-4 py-4 shadow-sm"
+						className="cursor-pointer text-red-600 hover:text-red-800 font-semibold transition-colors duration-200 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg px-4 py-4 shadow-sm"
 					>
 						remove
 					</button>
@@ -125,7 +126,7 @@ export function UploadImageColors({
 					})
 				}
 				type="button"
-				className="mt-3 bg-[#0095FF] text-white py-2 px-4 rounded max-w-28 hover:bg-[#007ace] cursor-pointer transition-colors duration-200"
+				className="mt-3 bg-[#0095FF] dark:bg-blue-600 text-white py-2 px-4 rounded max-w-28 hover:bg-[#007ace] dark:hover:bg-blue-700 cursor-pointer transition-colors duration-200"
 			>
 				Add Color
 			</button>

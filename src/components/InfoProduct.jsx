@@ -63,7 +63,8 @@ export function InfoProduct({
 								className={styleProduct.level4}
 							>
 								<SelectButton
-									className="w-full h-[48px] text-[16px] font-medium"
+									className="w-full h-[48px] text-[16px] font-medium dark:text-white"
+									cnLabel="dark:text-white"
 									cnOption="text-[16px] font-medium"
 									label="Category"
 									placeholder="Select Category"
@@ -100,7 +101,8 @@ export function InfoProduct({
 									required
 								/>
 								<SelectButton
-									className="w-full h-[48px] text-[16px] font-medium"
+									className="w-full h-[48px] text-[16px] font-medium dark:text-white"
+									cnLabel="dark:text-white"
 									cnOption="text-[16px] font-medium"
 									label="Sub Category"
 									placeholder="Select Sub Category"

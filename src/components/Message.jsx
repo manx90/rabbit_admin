@@ -9,8 +9,8 @@ export default function Message() {
 				<div
 					className={`p-4 rounded-lg ${
 						Message.type === "success"
-							? "fixed top-5 right-15  z-10 bg-green-100 text-green-700 border border-green-200 transition duration-300 ease-in-out"
-							: "fixed top-5 right-15  z-10 bg-red-100 text-red-700 border border-red-200 transition duration-300 ease-in-out"
+							? "fixed top-5 right-15  z-10 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 border border-green-200 dark:border-green-800 transition duration-300 ease-in-out"
+							: "fixed top-5 right-15  z-10 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 border border-red-200 dark:border-red-800 transition duration-300 ease-in-out"
 					}`}
 				>
 					<div className="flex items-center gap-2">

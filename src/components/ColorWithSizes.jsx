@@ -11,7 +11,7 @@ export function ColorWithSizes({
 				(variant, variantIndex) => (
 					<div
 						key={variantIndex}
-						className="relative grid grid-cols-1 md:grid-cols-2 gap-4 border border-gray-200 p-4 rounded mb-4"
+						className="relative grid grid-cols-1 md:grid-cols-2 gap-4 border border-gray-200 dark:border-gray-700 p-4 rounded mb-4 dark:bg-gray-800"
 					>
 						<button
 							onClick={() => {
@@ -22,7 +22,7 @@ export function ColorWithSizes({
 									},
 								});
 							}}
-							className="absolute top-2 right-2 px-2 cursor-pointer bg-red-500 rounded-lg text-white hover:bg-red-600 transition duration-200 ease-in-out"
+							className="absolute top-2 right-2 px-2 cursor-pointer bg-red-500 dark:bg-red-600 rounded-lg text-white hover:bg-red-600 dark:hover:bg-red-700 transition duration-200 ease-in-out"
 						>
 							remove
 						</button>
@@ -153,7 +153,7 @@ export function ColorWithSizes({
 											1 && (
 											<button
 												type="button"
-												className="text-red-600 cursor-pointer hover:text-red-700  transition-all duration-500 ease-in-out bg-red-100 px-2 rounded hover:bg-red-200 "
+												className="text-red-600 cursor-pointer hover:text-red-700 transition-all duration-500 ease-in-out bg-red-100 dark:bg-red-900/30 px-2 rounded hover:bg-red-200 dark:hover:bg-red-900/50"
 												onClick={() => {
 													dispatchProductInfo({
 														type: "REMOVE_COLOR_QUANTITY",

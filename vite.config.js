@@ -29,7 +29,7 @@ export default defineConfig({
 
 	// Build output settings
 	build: {
-		outDir: "app",
+		outDir: "./dist",
 		emptyOutDir: true,
 		rollupOptions: {
 			output: {

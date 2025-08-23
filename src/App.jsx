@@ -9,7 +9,7 @@ import Dashboard from "./pages/Dashboard";
 import Sidebar from "./components/Sidebar";
 import Product from "./pages/Product";
 import Login from "./pages/Login";
-import Order from "./pages/Order";
+import Order from "./pages/Order/index";
 import SignUp from "./pages/SignUp";
 import AccountsManager from "./pages/AccountsManager";
 import Header from "./components/Header";
@@ -22,8 +22,15 @@ import { UtilesProvider } from "./Contexts/utils.context";
 import { CategoryProvider } from "./Contexts/Category.Context";
 import { UpdateProvider } from "./Contexts/Update.Context";
 import { AccountProvider } from "./Contexts/AccountContext";
+import Category from "./pages/Category";
+import { useQuery } from "@tanstack/react-query";
+import { Category as CategoryApi } from "./api/cateogryApi";
 
 export default function App() {
+	const { data: categories } = useQuery({
+		queryKey: ["categories"],
+		queryFn: CategoryApi.getAll,
+	});
 	const [sidebarOpen, setSidebarOpen] =
 		useState(false);
 	const [isMobile, setIsMobile] = useState(false);
@@ -155,12 +162,15 @@ export default function App() {
 											setOpen={setSidebarOpen}
 										/>
 										<div className="flex-1">
-											<Routes >
+											<Routes>
 												<Route
 													path="/"
 													element={
 														<ProtectedRoute>
-															<Navigate to="/product" replace />
+															<Navigate
+																to="/product"
+																replace
+															/>
 														</ProtectedRoute>
 													}
 												/>
@@ -170,6 +180,18 @@ export default function App() {
 														<PublicRoute>
 															<Login />
 														</PublicRoute>
+													}
+												/>
+												<Route
+													path="/category"
+													element={
+														<ProtectedRoute>
+															<Category
+																categories={
+																	categories
+																}
+															/>
+														</ProtectedRoute>
 													}
 												/>
 												<Route
@@ -197,7 +219,11 @@ export default function App() {
 													path="/product"
 													element={
 														<ProtectedRoute>
-															<Product />
+															<Product
+																categories={
+																	categories
+																}
+															/>
 														</ProtectedRoute>
 													}
 												/>

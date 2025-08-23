@@ -12,21 +12,21 @@ export function SubCategory() {
 	} = useCategory();
 	if (isLoading2) {
 		return (
-			<div className="flex items-center justify-center  bg-gray-50">
+			<div className="flex items-center justify-center  bg-gray-50 dark:bg-gray-800">
 				<div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-500"></div>
 			</div>
 		);
 	}
 	return (
-		<div className="bg-white rounded-2xl p-[12px] border shadow-sm hover:shadow-md transition-shadow duration-200">
+		<div className="bg-white dark:bg-gray-800 rounded-2xl p-[12px] border dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow duration-200 dark:shadow-gray-900">
 			<div className="flex flex-col gap-6">
 				<div className="flex flex-col lg:flex-row justify-between gap-6">
 					<div className="flex flex-col lg:flex-row gap-4 w-full">
 						<div className="flex flex-col gap-2 w-full">
 							<SelectButton
-								className="w-full h-12 text-[16px] font-medium"
-								cnOption="text-[16px] font-medium"
-								cnLabel="text-[16px] font-medium"
+								className="w-full h-12 text-[16px] font-medium dark:text-white"
+								cnOption="text-[16px] font-medium dark:text-white"
+								cnLabel="dark:text-white"
 								label="Main Category"
 								// value={productInfo?.categoryId}
 								options={mainCategoryProduct}
@@ -40,8 +40,9 @@ export function SubCategory() {
 						</div>
 						<div className="flex flex-col gap-2 w-full">
 							<InputSimple
-								className="w-full h-12 text-[16px] font-medium"
-								cnLabel="text-[16px] font-medium"
+								className="w-full h-12 text-[16px] font-medium dark:text-white"
+								cnLabel="text-[16px] font-medium dark:text-white"
+								cnOption="text-[16px] font-medium dark:text-white"
 								placeholder="Enter Sub Category"
 								type="text"
 								onChange={(e) => {

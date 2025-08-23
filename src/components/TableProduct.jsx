@@ -20,7 +20,7 @@ export default function TableProduct() {
 	const { setMessage } = useUtiles();
 
 	return (
-		<div className="p-6 bg-white rounded-xl shadow-lg">
+		<div className="p-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg dark:shadow-gray-900">
 			{/* Search and Controls */}
 			<div className="mb-6 flex flex-col sm:flex-row gap-4 justify-between items-center">
 				<div className="w-full sm:w-72">
@@ -30,11 +30,11 @@ export default function TableProduct() {
 							onChange={(e) =>
 								setGlobalFilter(e.target.value)
 							}
-							className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+							className="w-full pl-10 pr-4 py-2.5 border border-gray-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
 							placeholder="Search products..."
 						/>
 						<svg
-							className="absolute left-3 top-3 h-5 w-5 text-gray-400"
+							className="absolute left-3 top-3 h-5 w-5 text-gray-400 dark:text-gray-500"
 							fill="none"
 							stroke="currentColor"
 							viewBox="0 0 24 24"
@@ -58,7 +58,7 @@ export default function TableProduct() {
 								Number(e.target.value),
 							);
 						}}
-						className="px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+						className="px-4 py-2.5 border border-gray-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all dark:bg-gray-700 dark:text-white"
 					>
 						{[
 							5, 10, 20, 30, 40, 50, 100, 200,
@@ -78,14 +78,14 @@ export default function TableProduct() {
 					<div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-500"></div>
 				</div>
 			) : error ? (
-				<div className="text-red-500 p-4 text-center bg-red-50 rounded-lg">
+				<div className="text-red-500 p-4 text-center bg-red-50 dark:bg-red-900/20 rounded-lg">
 					{error}
 				</div>
 			) : (
 				<>
-					<div className="overflow-x-auto rounded-lg border border-gray-200">
+					<div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700">
 						<table className="w-full">
-							<thead className="bg-gray-50">
+							<thead className="bg-gray-50 dark:bg-gray-700">
 								{table
 									.getHeaderGroups()
 									.map((headerGroup) => (
@@ -95,7 +95,7 @@ export default function TableProduct() {
 													<th
 														key={header.id}
 														onClick={header.column.getToggleSortingHandler()}
-														className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors relative"
+														className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors relative"
 														style={{
 															width:
 																header.getSize(),
@@ -169,19 +169,19 @@ export default function TableProduct() {
 													</th>
 												),
 											)}
-											<th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+											<th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
 												Actions
 											</th>
 										</tr>
 									))}
 							</thead>
-							<tbody className="divide-y divide-gray-200 bg-white">
+							<tbody className="divide-y divide-gray-200 dark:divide-gray-700 bg-white dark:bg-gray-800">
 								{table
 									.getRowModel()
 									.rows.map((row) => (
 										<tr
 											key={row.id}
-											className="hover:bg-gray-50 transition-colors"
+											className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
 										>
 											{row
 												.getVisibleCells()
@@ -206,9 +206,9 @@ export default function TableProduct() {
 																	  }
 																	: undefined
 															}
-															className={`px-6 py-4 whitespace-nowrap text-sm text-center text-gray-600 ${
+															className={`px-6 py-4 whitespace-nowrap text-sm text-center text-gray-600 dark:text-gray-300 ${
 																isNameCell
-																	? "cursor-pointer hover:text-blue-600"
+																	? "cursor-pointer hover:text-blue-600 dark:hover:text-blue-400"
 																	: ""
 															}`}
 															style={{
@@ -224,7 +224,7 @@ export default function TableProduct() {
 														</td>
 													);
 												})}
-											<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+											<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">
 												<div className="flex items-center space-x-3">
 													<button
 														onClick={() => {
@@ -235,7 +235,7 @@ export default function TableProduct() {
 															);
 															setIsUpdate(true);
 														}}
-														className="p-2 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-lg transition-colors"
+														className="p-2 text-blue-600 hover:text-blue-800 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg transition-colors"
 													>
 														<svg
 															className="w-5 h-5"
@@ -297,7 +297,7 @@ export default function TableProduct() {
 																);
 															}
 														}}
-														className="p-2 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-lg transition-colors"
+														className="p-2 text-red-600 hover:text-red-800 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg transition-colors"
 													>
 														<svg
 															className="w-5 h-5"
