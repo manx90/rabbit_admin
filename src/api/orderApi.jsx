@@ -8,11 +8,15 @@ export class Order {
 	static getOne = (id) =>
 		axiosClient.get(`${mainDirection}/${id}`);
 	static create = (formData) =>
-		axiosClient.post(mainDirection, formData, {
-			headers: {
-				"Content-Type": "application/json",
+		axiosClient.post(
+			`${mainDirection}/create`,
+			formData,
+			{
+				headers: {
+					"Content-Type": "application/json",
+				},
 			},
-		});
+		);
 	static readyBy = (id) =>
 		axiosClient.put(
 			`${mainDirection}/readyBy/${id}`,
@@ -41,4 +45,20 @@ export class Order {
 		);
 	static deleteOne = (id) =>
 		axiosClient.delete(`${mainDirection}/${id}`);
+	static countPending = async () =>
+		await axiosClient.get(
+			`${mainDirection}/count/pending`,
+		);
+	static countCancelled = () =>
+		axiosClient.get(
+			`${mainDirection}/count/cancelled`,
+		);
+	static countShipped = () =>
+		axiosClient.get(
+			`${mainDirection}/count/shipped`,
+		);
+	static countReadied = () =>
+		axiosClient.get(
+			`${mainDirection}/count/readied`,
+		);
 }

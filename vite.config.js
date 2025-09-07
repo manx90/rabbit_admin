@@ -1,41 +1,46 @@
-import { defineConfig } from "vite";
+import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
 import { fileURLToPath } from "url";
-import tailwindcss from "@tailwindcss/vite";
+import { defineConfig } from "vite";
 
-// https://vite.dev/config/
 export default defineConfig({
-	// Plugins used (React only)
-	plugins: [react(), tailwindcss()],
+  plugins: [
+    react({
+      include: [
+        /\.jsx?$/,
+        /\.tsx?$/,
+        /\.mjs$/,
+        /\.cjs$/,
+        /\.js$/,
+        /index\.jsx$/,
+        /App\.jsx$/,
+      ],
+      exclude: /node_modules/,
+    }),
+    tailwindcss(),
+  ],
 
-	// Path alias
-	resolve: {
-		alias: {
-			"@": path.resolve(
-				path.dirname(
-					fileURLToPath(import.meta.url),
-				),
-				"./src",
-			),
-		},
-	},
+  resolve: {
+    alias: {
+      "@": path.resolve(path.dirname(fileURLToPath(import.meta.url)), "./src"),
+    },
+  },
 
-	// Development server settings
-	server: {
-		port: 8080,
-		open: true,
-	},
+  server: {
+    port: 8080,
+    open: true,
+  },
 
-	// Build output settings
-	build: {
-		outDir: "./dist",
-		emptyOutDir: true,
-		rollupOptions: {
-			output: {
-				manualChunks: undefined,
-			},
-		},
-		copyPublicDir: true,
-	},
+  build: {
+    outDir: "./dist",
+    emptyOutDir: true,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          lodash: ["lodash"],
+        },
+      },
+    },
+  },
 });

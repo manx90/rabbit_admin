@@ -1,141 +1,375 @@
-import React from "react";
-import { TableOrderProvider } from "../../Contexts/TableOrder.context";
-import TableOrder from "./components/TableOrder";
-import { MdDelete } from "react-icons/md";
-import {
-	ButtonOne,
-	Row,
-} from "../Category/constant/tw-styled-components";
+import React, {
+	useEffect,
+	useState,
+} from "react";
+import { FormProvider } from "react-hook-form";
+import InputUI from "../../components/InputUI";
+import SelectSearch from "../../components/Select&Search";
+import { useArea } from "../../hooks/useArea";
+import { useCity } from "../../hooks/useCity";
+import { useOrderForm } from "../../hooks/useOrderForm";
+import { useProduct } from "../../hooks/useProduct";
+import { useProductOne } from "../../hooks/useProductOne";
+import SSAnted from "./components/searchselect";
+import Chart from "./components/Chart";
+import TableOrigin from "./components/Table";
 import { Order as OrderApi } from "../../api/orderApi";
-import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
-import { useQuery } from "@tanstack/react-query";
 export default function Order() {
+	const [isUpdate, setIsUpdate] = useState(false);
+	const [updateData, setUpdateData] =
+		useState(null);
+	const form = useOrderForm();
 	const {
-		data: orders,
-		isLoading,
-		error,
-		refetch,
-	} = useQuery({
-		queryKey: ["orders"],
-		queryFn: () => OrderApi.getAll(),
-	});
-	const [open, setOpen] = useState(false);
-	const [id, setId] = useState(null);
-	const handleDelete = async (id) => {
-		await OrderApi.deleteOne(id)
-			.then(() => {
-				refetch();
-				toast.success(
-					"Order deleted successfully",
+		reset,
+		watch,
+		itemsFields,
+		itemsAppend,
+		itemsRemove,
+		setValue,
+		itemsUpdate,
+	} = form;
+	const { data: city } = useCity();
+	const cityId = watch("city");
+	const { data: area } = useArea(cityId);
+	useEffect(() => {
+		const sub = watch((values) =>
+			console.log("📌 Form Values:", values),
+		);
+		return () => sub.unsubscribe();
+	}, [watch]);
+	const [pending, setPending] = useState();
+	useEffect(() => {
+		const fetchCountPending = async () => {
+			try {
+				const res = await OrderApi.countPending();
+				console.log(res);
+				setPending(res);
+			} catch (error) {
+				console.error(
+					"Failed to fetch pending orders count:",
+					error,
 				);
-				setOpen(false);
-				setId(null);
-			})
-			.catch((err) => {
-				toast.error(err.response.data.message);
-			});
-	};
+			}
+		};
+		fetchCountPending();
+	}, []);
+
+	const [cancelled, setCancelled] = useState();
+	useEffect(() => {
+		const fetchCountPending = async () => {
+			try {
+				const res =
+					await OrderApi.countCancelled();
+				console.log(res);
+				setCancelled(res);
+			} catch (error) {
+				console.error(
+					"Failed to fetch pending orders count:",
+					error,
+				);
+			}
+		};
+		fetchCountPending();
+	}, []);
+	const [shipped, setShipped] = useState();
+	useEffect(() => {
+		const fetchCountPending = async () => {
+			try {
+				const res = await OrderApi.countShipped();
+				console.log(res);
+				setShipped(res);
+			} catch (error) {
+				console.error(
+					"Failed to fetch pending orders count:",
+					error,
+				);
+			}
+		};
+		fetchCountPending();
+	}, []);
 	return (
-		<div className="ContentPage">
-			<TableOrderProvider>
-				<TableOrder
-					orders={orders}
-					isLoading={isLoading}
-					error={error}
-					refetch={refetch}
-					open={open}
-					setOpen={setOpen}
-					id={id}
-					setId={setId}
-					handleDelete={handleDelete}
-				>
-					<ConfirmDelete
-						open={open}
-						setOpen={setOpen}
-						id={id}
-						handleDelete={handleDelete}
-						setId={setId}
-					/>
-				</TableOrder>
-			</TableOrderProvider>
-		</div>
+		<FormProvider {...form}>
+			<form
+				onSubmit={form.handleSubmit((data) =>
+					form.onSubmit(
+						data,
+						isUpdate,
+						updateData,
+					),
+				)}
+				className="ContentPage flex lg:flex-row flex-col gap-4 justify-between w-full"
+			>
+				<div className="w-full">
+					<div className="mx-auto grid lg:grid-cols-4 grid-cols-2 justify-between gap-2">
+						<Chart counts={100} />
+						<Chart
+							name="Cancelled Orders"
+							counts={cancelled}
+							color="red"
+						/>
+						<Chart
+							name="Delivered Orders"
+							counts={shipped}
+							color="green"
+						/>
+						<Chart
+							name="Pending Orders"
+							counts={pending}
+							color="yellow"
+						/>
+					</div>
+					<div className="justify-between gap-2 border rounded-md border-slate-700 p-2 mt-10">
+						<TableOrigin
+							setValue={setValue}
+							itemsUpdate={itemsUpdate}
+							isUpdate={isUpdate}
+							setIsUpdate={setIsUpdate}
+							setUpdateData={setUpdateData}
+						/>
+					</div>
+				</div>
+
+				<OrderForm
+					reset={reset}
+					isUpdate={isUpdate}
+					setIsUpdate={setIsUpdate}
+					cityId={cityId}
+					city={city}
+					area={area}
+					form={form}
+					watch={watch}
+					itemsFields={itemsFields}
+					itemsAppend={itemsAppend}
+					itemsRemove={itemsRemove}
+				/>
+			</form>
+		</FormProvider>
 	);
 }
-
-const ConfirmDelete = ({
-	open,
-	setOpen,
-	id,
-	handleDelete,
-}) => {
-	useEffect(() => {
-		if (open) {
-			document.body.style.overflow = "hidden";
-		} else {
-			document.body.style.overflow = "auto";
-		}
-	}, [open]);
+function OrderForm({
+	reset,
+	isUpdate,
+	setIsUpdate,
+	form,
+	watch,
+	itemsFields,
+	itemsAppend,
+	itemsRemove,
+	city,
+	area,
+	cityId,
+}) {
 	return (
-		<div
-			className={`fixed inset-0 bg-black/50 h-screen w-screen flex justify-center items-center transition-all duration-300 ${
-				open
-					? "opacity-100 z-50 pointer-events-auto"
-					: "opacity-0 -z-50 pointer-events-none"
-			}`}
-			onClick={() => {
-				setOpen(false);
-			}}
-		>
+		<div className="w-full mx-auto flex flex-col max-w-[500px] gap-3 border p-2 rounded-md border-slate-800">
+			{/* Basic Info */}
+			<div className="flex flex-col gap-2 border-b-2 pb-2 border-slate-700">
+				<InputUI
+					labelInput="Name"
+					placeHolderInput="Enter the Name"
+					type="text"
+					{...form.register("name")}
+				/>
+				<InputUI
+					labelInput="Phone"
+					placeHolderInput="05********"
+					type="number"
+					className="appearance-none 
+        [&::-webkit-outer-spin-button]:appearance-none 
+        [&::-webkit-inner-spin-button]:appearance-none"
+					{...form.register("phone")}
+				/>
+				<div className="flex flex-col lg:flex-row gap-2">
+					<SelectSearch
+						name="city"
+						label="City"
+						data={city?.[0]?.data || []}
+						KeyID={"id"}
+						KeyValue={"id"}
+						KeyName={"name"}
+					/>
+					<SelectSearch
+						disable={!cityId}
+						name="area"
+						label="Area"
+						data={area?.[0]?.data || []}
+						KeyID={"id"}
+						KeyValue={"id"}
+						KeyName={"name"}
+					/>
+				</div>
+				<InputUI
+					labelInput="Address"
+					placeHolderInput="Address"
+					type="text"
+					{...form.register("address")}
+				/>
+				<InputUI
+					labelInput="Note"
+					placeHolderInput="Note..."
+					type="text"
+					{...form.register("note")}
+				/>
+			</div>
+			{/* Items */}
+			<div className="flex flex-col gap-4">
+				{itemsFields.map((field, index) => (
+					<FormProd
+						field={field}
+						index={index}
+						remove={itemsRemove}
+						form={form}
+						watch={watch}
+						itemsAppend={itemsAppend}
+					/>
+				))}
+			</div>
 			<div
-				className="relative bg-gray-100 w-3/4 lg:w-fit dark:bg-gray-700 lg:max-w-md p-4 rounded-md justify-center flex flex-col gap-4"
-				onClick={(e) => {
-					e.stopPropagation();
-				}}
+				dir="rtl"
+				className="flex items-end justify-between"
 			>
+				<div className="gap-2 flex mt-8 mb-2">
+					<button
+						type="button"
+						className="bg-white hover:bg-slate-400 cursor-pointer transition-colors text-black px-2 py-1 rounded-sm"
+						onClick={() =>
+							itemsAppend({
+								productId: "",
+								sizeName: "",
+								colorName: "",
+								quantity: "",
+							})
+						}
+					>
+						Add Item
+					</button>
+					<button
+						type="submit"
+						className=" bg-white hover:bg-slate-400 cursor-pointer transition-colors text-black text-semibold px-2 py-1 rounded-sm"
+					>
+						{isUpdate ? "update" : "Create"}
+					</button>
+				</div>
 				<button
-					className="absolute cursor-pointer top-2 right-2 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 transition-colors"
+					className=" bg-white hover:bg-slate-400 cursor-pointer transition-colors text-black text-semibold px-2 py-1 rounded-sm mt-8 mb-2"
 					onClick={() => {
-						setOpen(false);
+						reset();
+						setIsUpdate(false);
+						setUpdateData(null);
 					}}
 				>
-					<svg
-						className="w-6 h-6"
-						fill="none"
-						stroke="currentColor"
-						viewBox="0 0 24 24"
-					>
-						<path
-							strokeLinecap="round"
-							strokeLinejoin="round"
-							strokeWidth={2}
-							d="M6 18L18 6M6 6l12 12"
-						/>
-					</svg>
+					Cancel
 				</button>
-				<div className="text-center mb-6">
-					<div className="mx-auto w-12 h-12 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center mb-4">
-						<MdDelete className="w-6 h-6 text-red-600 dark:text-red-400" />
-					</div>
-					<h2 className="font-Noto text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
-						حذف الطلب
-					</h2>
-					<p className="text-gray-600 dark:text-gray-400">
-						هل أنت متأكد من أنك تريد حذف هذا
-						الطلب؟ لا يمكن التراجع عن هذا الإجراء.
-					</p>
-				</div>
-				<Row className="justify-center">
-					<ButtonOne
-						className="bg-red-600 text-lg text-white mx-auto hover:bg-red-700 dark:hover:bg-red-700 dark:text-white"
-						onClick={() => {
-							handleDelete(id);
-						}}
-					>
-						حذف
-					</ButtonOne>
-				</Row>
 			</div>
 		</div>
 	);
-};
+}
+function FormProd({
+	field,
+	index,
+	form,
+	remove,
+	watch,
+}) {
+	const WatchProdId = watch(
+		`items.${index}.productId`,
+	);
+	const [ProdId, setProdId] = useState(1);
+	const {
+		data: ProductOne,
+		isLoading,
+		isFetching,
+	} = useProductOne(ProdId);
+	const [searchProd, setSearchProd] =
+		useState("");
+	const { data: products } =
+		useProduct(searchProd);
+
+	useEffect(() => {
+		setProdId(WatchProdId);
+	}, [WatchProdId]);
+	useEffect(() => {
+		console.log(searchProd, products);
+	}, [setSearchProd, searchProd, products]);
+	useEffect(() => {
+		console.log(
+			"🔍 search:",
+			searchProd,
+			"fetching:",
+			isFetching,
+			"data:",
+			products,
+		);
+	}, [searchProd, isFetching, products]);
+	return (
+		<div
+			key={field.id}
+			className="rounded-md flex flex-col gap-2"
+		>
+			{/* Product */}
+			<SSAnted
+				name={`items.${index}.productId`}
+				label="Product"
+				data={products?.data || []}
+				KeyID="id"
+				KeyName="name"
+				KeyValue="id"
+				setSearchProd={setSearchProd}
+				isLoading={isLoading}
+				isFetching={isFetching}
+			/>
+			{/* <SelectSearch
+				name={`items.${index}.productId`}
+				label="Product"
+				data={products?.data || []}
+				KeyID="id"
+				KeyName="name"
+				KeyValue="id"
+				setSearchProd={setSearchProd}
+				isLoading={isLoading}
+				isFetching={isFetching}
+			/> */}
+			<div className="flex gap-2">
+				<SelectSearch
+					name={`items.${index}.sizeName`}
+					label="Size"
+					data={ProductOne?.sizeDetails || []}
+					KeyID="sizeName"
+					KeyName="sizeName"
+					disable={!WatchProdId}
+					KeyValue="sizeName"
+				/>
+				<SelectSearch
+					name={`items.${index}.colorName`}
+					label="Color"
+					data={ProductOne?.colors || []}
+					KeyID="name"
+					KeyName="name"
+					disable={!WatchProdId}
+					KeyValue="name"
+				/>
+			</div>
+			<div className="flex gap-2">
+				<InputUI
+					labelInput="Quantity"
+					placeHolderInput="quantity"
+					disable={!WatchProdId}
+					className="appearance-none 
+        [&::-webkit-outer-spin-button]:appearance-none 
+        [&::-webkit-inner-spin-button]:appearance-none"
+					type="number"
+					{...form.register(
+						`items.${index}.quantity`,
+					)}
+				/>
+
+				<button
+					type="button"
+					className="bg-slate-900 h-9 self-end hover:bg-slate-800 cursor-pointer transition-colors border-[0.5px] text-slate-300 text-lg px-2 py-1 rounded-sm w-full"
+					onClick={() => remove(index)}
+				>
+					Remove
+				</button>
+			</div>
+		</div>
+	);
+}
