@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Optos as OptosApi } from "@/api/optosApi";
 import { Order as OrderApi } from "@/api/orderApi";
+import DrawerComp from "./Drawer";
 import {
 	Select,
 	SelectContent,
@@ -50,6 +51,7 @@ import React, {
 } from "react";
 import { useOrders } from "./../services/OrderService";
 import PopOver from "@/components/popover";
+import { Button } from "antd";
 
 const CityAreaDisplay = React.memo(
 	({
@@ -339,6 +341,7 @@ export default function TableOrigin({
 				),
 		},
 		{
+			id: "action",
 			header: "Action",
 			cell: ({ row }) => (
 				<Dropdown
@@ -426,7 +429,20 @@ export default function TableOrigin({
 		// onSortingChange: setSorting,
 		enableSortingRemoval: false,
 	});
+	const [openDrawer, setOpenDrawer] =
+		useState(false);
+	const [selectedOrder, setSelectedOrder] =
+		useState<Order | null>(null);
 
+	const showDrawer = (order: Order) => {
+		setSelectedOrder(order);
+		setOpenDrawer(true);
+	};
+
+	const onCloseDrawer = () => {
+		setOpenDrawer(false);
+		setSelectedOrder(null);
+	};
 	return (
 		<div className="space-y-6 ">
 			{/* Filters */}
@@ -550,6 +566,10 @@ export default function TableOrigin({
 											row.getIsSelected() &&
 											"selected"
 										}
+										onClick={() =>
+											showDrawer(row.original)
+										}
+										className="cursor-pointer hover:bg-muted/30 transition"
 									>
 										{row
 											.getVisibleCells()
@@ -591,6 +611,58 @@ export default function TableOrigin({
 					TanStack Table
 				</a>
 			</p>
+			<DrawerComp
+				title={`Order #${selectedOrder?.id}`}
+				placement="bottom"
+				height={400}
+				onClose={onCloseDrawer}
+				open={openDrawer}
+				extra={
+					<Button
+						type="primary"
+						onClick={onCloseDrawer}
+					>
+						Close
+					</Button>
+				}
+			>
+				{selectedOrder ? (
+					<div className="space-y-3 text-sm">
+						<p>
+							<strong>Name:</strong>{" "}
+							{selectedOrder.consignee_name}
+						</p>
+						<p>
+							<strong>Phone:</strong>{" "}
+							{selectedOrder.consignee_phone}
+						</p>
+						<p>
+							<strong>Address:</strong>{" "}
+							{selectedOrder.consignee_address}
+						</p>
+						<p>
+							<strong>Status:</strong>{" "}
+							{selectedOrder.status}
+						</p>
+						<p>
+							<strong>Amount:</strong> $
+							{selectedOrder.cod_amount}
+						</p>
+						<ul className="list-disc pl-5">
+							{selectedOrder.items.map((item) => (
+								<li key={item.id}>
+									{item.productId} -{" "}
+									{item.sizeName} /{" "}
+									{item.colorName} ×{" "}
+									{item.quantity}
+								</li>
+							))}
+						</ul>
+					</div>
+				) : (
+					<p>No order selected</p>
+				)}
+			</DrawerComp>
 		</div>
 	);
 }

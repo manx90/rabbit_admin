@@ -23,6 +23,7 @@ export default function Dropdown({
 					variant="ghost"
 					className="rounded-full shadow-none"
 					aria-label="Open edit menu"
+					onClick={(e) => e.stopPropagation()}
 				>
 					<EllipsisIcon
 						size={16}

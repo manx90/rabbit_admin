@@ -63,6 +63,7 @@ export default function PopOver({
 							className="capitalize"
 							color="warning"
 							variant="flat"
+							onClick={(e) => e.stopPropagation()}
 						>
 							<IoLogoWhatsapp className="text-green-500 w-5 h-5" />
 							0{phone}

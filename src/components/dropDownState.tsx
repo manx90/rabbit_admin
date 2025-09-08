@@ -27,6 +27,7 @@ export default function DropdownState({
 					variant="ghost"
 					className={className}
 					aria-label="Open edit menu"
+					onClick={(e) => e.stopPropagation()}
 				>
 					{Value}
 				</span>
