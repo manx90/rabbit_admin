@@ -13,6 +13,7 @@ const DrawerComp = ({
 }) => {
 	return (
 		<Drawer
+			className="border rounded-2xl"
 			title={title}
 			placement={placement}
 			height={height}

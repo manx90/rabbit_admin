@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { SelectNative } from "@/components/ui/select-native";

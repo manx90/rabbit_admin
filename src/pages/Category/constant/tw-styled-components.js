@@ -51,7 +51,8 @@ ${({ variant }) =>
     ? "bg-red-600 hover:bg-red-800 text-white"
     : variant === "edit"
     ? "bg-yellow-600 hover:bg-yellow-800 text-white"
-    : "bg-blue-600 hover:bg-blue-800 text-white"}
+    : "bg-blue-600 hover:bg-blue-800 text-white"
+  }
   w-24
   rounded-md
   transition

@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import React, {
 	useEffect,
 	useState,
@@ -214,6 +215,7 @@ function OrderForm({
 			<div className="flex flex-col gap-4">
 				{itemsFields.map((field, index) => (
 					<FormProd
+						key={field.id}
 						field={field}
 						index={index}
 						remove={itemsRemove}
@@ -225,12 +227,12 @@ function OrderForm({
 			</div>
 			<div
 				dir="rtl"
-				className="flex items-end justify-between"
+				className="flex items-center justify-between"
 			>
-				<div className="gap-2 flex mt-8 mb-2">
+				<div className="gap-2 flex  items-center">
 					<button
 						type="button"
-						className="bg-white hover:bg-slate-400 cursor-pointer transition-colors text-black px-2 py-1 rounded-sm"
+						className="border cursor-pointer transition-colors text-black px-2 py-1 rounded-sm"
 						onClick={() =>
 							itemsAppend({
 								productId: "",
@@ -244,13 +246,13 @@ function OrderForm({
 					</button>
 					<button
 						type="submit"
-						className=" bg-white hover:bg-slate-400 cursor-pointer transition-colors text-black text-semibold px-2 py-1 rounded-sm"
+						className="bg-cyan-400 dark:text-cyan-900 hover:bg-cyan-600 border cursor-pointer transition-colors text-semibold px-2 py-1 rounded-sm"
 					>
 						{isUpdate ? "update" : "Create"}
 					</button>
 				</div>
 				<button
-					className=" bg-white hover:bg-slate-400 cursor-pointer transition-colors text-black text-semibold px-2 py-1 rounded-sm mt-8 mb-2"
+					className="bg-red-400 border hover:bg-red-600 cursor-pointer transition-colors dark:text-black text-semibold px-2 py-1 rounded-sm mt-8 mb-2"
 					onClick={() => {
 						reset();
 						setIsUpdate(false);
@@ -317,17 +319,7 @@ function FormProd({
 				isLoading={isLoading}
 				isFetching={isFetching}
 			/>
-			{/* <SelectSearch
-				name={`items.${index}.productId`}
-				label="Product"
-				data={products?.data || []}
-				KeyID="id"
-				KeyName="name"
-				KeyValue="id"
-				setSearchProd={setSearchProd}
-				isLoading={isLoading}
-				isFetching={isFetching}
-			/> */}
+
 			<div className="flex gap-2">
 				<SelectSearch
 					name={`items.${index}.sizeName`}
@@ -364,7 +356,7 @@ function FormProd({
 
 				<button
 					type="button"
-					className="bg-slate-900 h-9 self-end hover:bg-slate-800 cursor-pointer transition-colors border-[0.5px] text-slate-300 text-lg px-2 py-1 rounded-sm w-full"
+					className="dark:bg-slate-900 h-9 self-end hover:bg-slate-800 cursor-pointer transition-colors border-[0.5px] text-slate-300 text-lg px-2 py-1 rounded-sm w-full"
 					onClick={() => remove(index)}
 				>
 					Remove

@@ -49,9 +49,49 @@ import React, {
 	useMemo,
 	useState,
 } from "react";
+import { FaShekelSign } from "@react-icons/all-files/fa/FaShekelSign";
 import { useOrders } from "./../services/OrderService";
 import PopOver from "@/components/popover";
 import { Button } from "antd";
+import { useProductOne } from "../../../hooks/useProductOne";
+
+// Component to handle individual order items with product data
+const OrderItem = ({ item }) => {
+	const { data: product } = useProductOne(
+		item.productId,
+	);
+
+	return (
+		<li className="flex items-center gap-2 py-1 px-2 rounded-md bg-slate-50 dark:bg-slate-800 shadow-sm border border-slate-200 dark:border-slate-700 mb-1">
+			<div className="flex-1 min-w-0">
+				<span className="font-medium text-slate-800 dark:text-slate-100 truncate">
+					{product ? (
+						product.name
+					) : (
+						<span className="italic text-slate-400">
+							Product #{item.productId}
+						</span>
+					)}
+				</span>
+				<span className="mx-2 text-slate-400">
+					|
+				</span>
+				<span className="text-xs text-slate-600 dark:text-slate-300">
+					{item.sizeName}
+				</span>
+				<span className="mx-1 text-slate-400">
+					/
+				</span>
+				<span className="text-xs text-slate-600 dark:text-slate-300">
+					{item.colorName}
+				</span>
+			</div>
+			<span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-cyan-100 dark:bg-cyan-900 text-cyan-800 dark:text-cyan-200 text-xs font-semibold">
+				× {item.quantity}
+			</span>
+		</li>
+	);
+};
 
 const CityAreaDisplay = React.memo(
 	({
@@ -173,42 +213,12 @@ type Order = {
 
 export default function TableOrigin({
 	setValue,
-	isUpdate,
 	setIsUpdate,
 	setUpdateData,
 }) {
 	const [update, setUpdate] = useState<any>({});
 
 	const columns: ColumnDef<Order>[] = [
-		// {
-		// 	id: "select",
-		// 	header: ({ table }) => (
-		// 		<Checkbox
-		// 			checked={
-		// 				table.getIsAllPageRowsSelected() ||
-		// 				(table.getIsSomePageRowsSelected() &&
-		// 					"indeterminate")
-		// 			}
-		// 			onCheckedChange={(value) =>
-		// 				table.toggleAllPageRowsSelected(
-		// 					!!value,
-		// 				)
-		// 			}
-		// 			aria-label="Select all"
-		// 		/>
-		// 	),
-		// 	cell: ({ row }) => (
-		// 		<Checkbox
-		// 			checked={row.getIsSelected()}
-		// 			onCheckedChange={(value) =>
-		// 				row.toggleSelected(!!value)
-		// 			}
-		// 			aria-label="Select row"
-		// 		/>
-		// 	),
-		// 	enableSorting: false,
-		// },
-
 		{
 			header: "Name",
 			accessorKey: "consignee_name",
@@ -258,7 +268,10 @@ export default function TableOrigin({
 			header: "Amount",
 			accessorKey: "cod_amount",
 			cell: ({ row }) => (
-				<div>${row.getValue("cod_amount")}</div>
+				<div className="flex items-center text-lg gap-1">
+					{row.getValue("cod_amount")}
+					<FaShekelSign className="w-3 h-3 self-end" />
+				</div>
 			),
 			meta: {
 				filterVariant: "range",
@@ -456,7 +469,7 @@ export default function TableOrigin({
 					/>
 				</div>
 				{/* Status select */}
-				<div className="w-36">
+				<div className="w-36 flex items-center gap-3">
 					<Filter
 						column={table.getColumn("status")!}
 					/>
@@ -613,7 +626,7 @@ export default function TableOrigin({
 			</p>
 			<DrawerComp
 				title={`Order #${selectedOrder?.id}`}
-				placement="bottom"
+				placement="right"
 				height={400}
 				onClose={onCloseDrawer}
 				open={openDrawer}
@@ -627,38 +640,67 @@ export default function TableOrigin({
 				}
 			>
 				{selectedOrder ? (
-					<div className="space-y-3 text-sm">
-						<p>
-							<strong>Name:</strong>{" "}
-							{selectedOrder.consignee_name}
-						</p>
-						<p>
-							<strong>Phone:</strong>{" "}
-							{selectedOrder.consignee_phone}
-						</p>
-						<p>
-							<strong>Address:</strong>{" "}
-							{selectedOrder.consignee_address}
-						</p>
-						<p>
-							<strong>Status:</strong>{" "}
-							{selectedOrder.status}
-						</p>
-						<p>
-							<strong>Amount:</strong> $
-							{selectedOrder.cod_amount}
-						</p>
-						<ul className="list-disc pl-5">
-							{selectedOrder.items.map((item) => (
-								<li key={item.id}>
-									{item.productId} -{" "}
-									{item.sizeName} /{" "}
-									{item.colorName} ×{" "}
-									{item.quantity}
-								</li>
-							))}
-						</ul>
-					</div>
+					<>
+						<div className="grid grid-cols-3 gap-2">
+							<span className="font-medium text-gray-600 ">
+								Name:
+							</span>
+							<span className="col-span-2 text-gray-900 ">
+								{selectedOrder.consignee_name}
+							</span>
+
+							<span className="font-medium text-gray-600 ">
+								Phone:
+							</span>
+							<span className="col-span-2 text-gray-900 ">
+								{selectedOrder.consignee_phone}
+							</span>
+
+							<span className="font-medium text-gray-600 ">
+								Address:
+							</span>
+							<span className="col-span-2 text-gray-900 ">
+								{selectedOrder.consignee_address}
+							</span>
+
+							<span className="font-medium text-gray-600 ">
+								Status:
+							</span>
+							<span
+								className={`col-span-2 px-2 py-0.5 rounded-md text-xs font-medium w-fit
+            ${
+							selectedOrder.status === "delivered"
+								? "bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300"
+								: "bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300"
+						}`}
+							>
+								{selectedOrder.status}
+							</span>
+
+							<span className="font-medium text-gray-600 ">
+								Amount:
+							</span>
+							<span className="col-span-2 font-semibold text-gray-900 ">
+								${selectedOrder.cod_amount}
+							</span>
+						</div>
+
+						<div>
+							<h4 className="text-sm font-semibold text-gray-700 mb-1">
+								Items:
+							</h4>
+							<ul className="list-disc pl-5 space-y-1 text-gray-800 ">
+								{selectedOrder.items.map(
+									(item) => (
+										<OrderItem
+											key={item.id}
+											item={item}
+										/>
+									),
+								)}
+							</ul>
+						</div>
+					</>
 				) : (
 					<p>No order selected</p>
 				)}
@@ -771,7 +813,7 @@ function Filter({
 
 	if (filterVariant === "select") {
 		return (
-			<div className="*:not-first:mt-2">
+			<div className="*:not-first:mt-2 flex flex-col gap-2 ">
 				<Label htmlFor={`${id}-select`}>
 					{columnHeader}
 				</Label>

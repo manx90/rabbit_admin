@@ -40,7 +40,7 @@ export default function DarkMode() {
 				{/* Note: After dark mode implementation, rely on dark: prefix rather than group-data-[state=on]: */}
 				<MoonIcon
 					size={16}
-					className="shrink-0 scale-0 opacity-0 transition-all group-data-[state=on]:scale-100 group-data-[state=on]:opacity-100 dark:scale-100 dark:opacity-100"
+					className="shrink-0 text-white scale-0 opacity-0 transition-all group-data-[state=on]:scale-100 group-data-[state=on]:opacity-100 dark:scale-100 dark:opacity-100"
 					aria-hidden="true"
 				/>
 				<SunIcon

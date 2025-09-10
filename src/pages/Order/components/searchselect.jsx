@@ -54,7 +54,11 @@ const SSAnted = ({
 								.toLowerCase()
 								.includes(input.toLowerCase())
 						}
-						style={{ width: "100%" }}
+						className="dark-select-custom"
+						style={{
+							width: "100%",
+						}}
+						popupClassName="dark-dropdown-custom"
 					/>
 				</>
 			)}

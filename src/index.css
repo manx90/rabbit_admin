@@ -182,3 +182,108 @@ body {
 .badge-dot-lamp {
 	/* box-shadow and animation are now set inline for dynamic color */
 }
+
+/* Dark mode Select component styling */
+.dark .dark-select-custom .ant-select-selector {
+	background-color: #1e293b !important;
+	border-color: #374151 !important;
+	color: white !important;
+}
+
+.dark
+	.dark-select-custom
+	.ant-select-selection-placeholder {
+	color: #9ca3af !important;
+}
+
+.dark
+	.dark-select-custom
+	.ant-select-selection-item {
+	color: white !important;
+}
+
+.dark .dark-select-custom .ant-select-arrow {
+	color: #9ca3af !important;
+}
+
+.dark
+	.dark-select-custom:hover
+	.ant-select-selector {
+	border-color: #4b5563 !important;
+}
+
+.dark
+	.dark-select-custom.ant-select-focused
+	.ant-select-selector {
+	border-color: #3b82f6 !important;
+	box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2) !important;
+}
+
+/* Dark mode dropdown styling */
+.dark .dark-dropdown-custom .ant-select-dropdown {
+	background-color: #1e293b !important;
+	border: 1px solid #374151 !important;
+}
+
+.dark .dark-dropdown-custom .ant-select-item {
+	color: white !important;
+}
+
+.dark
+	.dark-dropdown-custom
+	.ant-select-item:hover {
+	background-color: #374151 !important;
+}
+
+.dark
+	.dark-dropdown-custom
+	.ant-select-item-option-selected {
+	background-color: #3b82f6 !important;
+	color: white !important;
+}
+
+.dark
+	.dark-dropdown-custom
+	.ant-select-item-option-active {
+	background-color: #374151 !important;
+}
+
+/* Additional dropdown option styling for better visibility */
+.dark
+	.dark-dropdown-custom
+	.ant-select-item-option {
+	color: white !important;
+	background-color: #1e293b !important;
+}
+
+.dark
+	.dark-dropdown-custom
+	.ant-select-item-option:hover {
+	background-color: #374151 !important;
+	color: white !important;
+}
+
+.dark
+	.dark-dropdown-custom
+	.ant-select-item-option-selected {
+	background-color: #3b82f6 !important;
+	color: white !important;
+}
+
+.dark
+	.dark-dropdown-custom
+	.ant-select-item-option-active {
+	background-color: #374151 !important;
+	color: white !important;
+}
+
+/* Ensure dropdown container has proper background */
+.dark .dark-dropdown-custom {
+	background-color: #1e293b !important;
+}
+
+.dark
+	.dark-dropdown-custom
+	.ant-select-dropdown-content {
+	background-color: #1e293b !important;
+}
