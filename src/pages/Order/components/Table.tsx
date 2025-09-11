@@ -681,7 +681,7 @@ export default function TableOrigin({
 								Amount:
 							</span>
 							<span className="col-span-2 font-semibold text-gray-900 ">
-								${selectedOrder.cod_amount}
+								{selectedOrder.cod_amount}
 							</span>
 						</div>
 

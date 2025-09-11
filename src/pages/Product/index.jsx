@@ -56,6 +56,7 @@ const Product = ({ categories }) => {
 				limit: limit,
 			}),
 	});
+	console.log(products);
 
 	const handleRemoveColor = (colorIndex) => {
 		removeColor(colorIndex);
