@@ -54,6 +54,7 @@ import { useOrders } from "./../services/OrderService";
 import PopOver from "@/components/popover";
 import { Button } from "antd";
 import { useProductOne } from "../../../hooks/useProductOne";
+import { useCityAreaCache } from "../../../hooks/useCityAreaCache";
 
 // Component to handle individual order items with product data
 const OrderItem = ({ item }) => {
@@ -101,59 +102,21 @@ const CityAreaDisplay = React.memo(
 		cityId: string;
 		areaId: string;
 	}) => {
-		const [cityName, setCityName] =
-			useState<string>("");
-		const [areaName, setAreaName] =
-			useState<string>("");
-		const [loading, setLoading] = useState(true);
-
-		useEffect(() => {
-			const fetchData = async () => {
-				try {
-					setLoading(true);
-
-					// Fetch areas for the city
-					const areasResponse =
-						await OptosApi.gitArea(
-							Number(cityId),
-						);
-					const areas =
-						areasResponse?.[0]?.data || [];
-
-					// Find the specific area
-					const area = areas.find(
-						(a: any) => a.id === Number(areaId),
-					);
-
-					if (area) {
-						setAreaName(area.name);
-						setCityName(area["city.name"] || "");
-					} else {
-						// Show IDs as fallback
-						setAreaName(`Area ${areaId}`);
-						setCityName(`City ${cityId}`);
-					}
-				} catch (error) {
-					console.error(
-						"Error fetching area data:",
-						error,
-					);
-					setAreaName(`Area ${areaId}`);
-					setCityName(`City ${cityId}`);
-				} finally {
-					setLoading(false);
-				}
-			};
-
-			if (cityId && areaId) {
-				fetchData();
-			}
-		}, [cityId, areaId]);
+		const { cityName, areaName, loading, error } =
+			useCityAreaCache(cityId, areaId);
 
 		if (loading) {
 			return (
 				<span className="text-gray-400">
 					Loading...
+				</span>
+			);
+		}
+
+		if (error) {
+			return (
+				<span className="text-red-400 text-xs">
+					Error loading
 				</span>
 			);
 		}
@@ -226,6 +189,7 @@ export default function TableOrigin({
 				<div
 					className="text-xs truncate max-w-[150px]"
 					title={row.getValue("consignee_name")}
+					onClick={() => showDrawer(row.original)}
 				>
 					{row.getValue("consignee_name")}
 				</div>
@@ -369,7 +333,9 @@ export default function TableOrigin({
 						await OrderApi.deleteOne(
 							row.original.id,
 						);
-						refetch();
+						setTimeout(() => {
+							refetch();
+						}, 800);
 					}}
 					toastProps={false}
 				/>
@@ -419,7 +385,12 @@ export default function TableOrigin({
 			);
 		}
 	}, [setUpdate, update]);
-	const { data: Orders, refetch } = useOrders();
+	const {
+		data: Orders,
+		refetch,
+		isLoading,
+		error,
+	} = useOrders();
 	const [columnFilters, setColumnFilters] =
 		useState<ColumnFiltersState>([]);
 
@@ -569,7 +540,39 @@ export default function TableOrigin({
 							))}
 					</TableHeader>
 					<TableBody>
-						{table.getRowModel().rows?.length ? (
+						{isLoading ? (
+							<TableRow>
+								<TableCell
+									colSpan={columns.length}
+									className="h-24 text-center"
+								>
+									<div className="flex items-center justify-center gap-2">
+										<div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-900"></div>
+										Loading orders...
+									</div>
+								</TableCell>
+							</TableRow>
+						) : error ? (
+							<TableRow>
+								<TableCell
+									colSpan={columns.length}
+									className="h-24 text-center"
+								>
+									<div className="flex flex-col items-center justify-center gap-2">
+										<div className="text-red-500">
+											Error loading orders
+										</div>
+										<button
+											onClick={() => refetch()}
+											className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
+										>
+											Retry
+										</button>
+									</div>
+								</TableCell>
+							</TableRow>
+						) : table.getRowModel().rows
+								?.length ? (
 							table
 								.getRowModel()
 								.rows.map((row) => (
@@ -578,9 +581,6 @@ export default function TableOrigin({
 										data-state={
 											row.getIsSelected() &&
 											"selected"
-										}
-										onClick={() =>
-											showDrawer(row.original)
 										}
 										className="cursor-pointer hover:bg-muted/30 transition"
 									>
@@ -606,7 +606,7 @@ export default function TableOrigin({
 									colSpan={columns.length}
 									className="h-24 text-center"
 								>
-									No results.
+									No orders found.
 								</TableCell>
 							</TableRow>
 						)}

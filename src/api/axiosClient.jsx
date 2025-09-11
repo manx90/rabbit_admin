@@ -30,11 +30,40 @@ axiosClient.interceptors.response.use(
 		if (error.response) {
 			// The request was made and the server responded with a status code
 			// that falls out of the range of 2xx
-			console.error(
-				"Response Error:",
-				error.response.data,
-			);
-			return Promise.reject(error.response.data);
+			const status = error.response.status;
+			const data = error.response.data;
+
+			// Handle specific error cases
+			if (status === 429) {
+				console.error(
+					"Rate limit exceeded. Please try again later.",
+				);
+				return Promise.reject(
+					new Error(
+						"Too many requests. Please try again later.",
+					),
+				);
+			} else if (status === 500) {
+				console.error("Server error:", data);
+				return Promise.reject(
+					new Error(
+						"Server error. Please try again later.",
+					),
+				);
+			} else if (status === 401) {
+				console.error(
+					"Unauthorized. Please login again.",
+				);
+				// Optionally redirect to login
+				return Promise.reject(
+					new Error(
+						"Unauthorized. Please login again.",
+					),
+				);
+			}
+
+			console.error("Response Error:", data);
+			return Promise.reject(data);
 		} else if (error.request) {
 			// The request was made but no response was received
 			console.error(

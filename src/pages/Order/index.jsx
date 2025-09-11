@@ -19,6 +19,8 @@ export default function Order() {
 	const [isUpdate, setIsUpdate] = useState(false);
 	const [updateData, setUpdateData] =
 		useState(null);
+	const [isSubmitting, setIsSubmitting] =
+		useState(false);
 	const form = useOrderForm();
 	const {
 		reset,
@@ -91,12 +93,28 @@ export default function Order() {
 	return (
 		<FormProvider {...form}>
 			<form
-				onSubmit={form.handleSubmit((data) =>
-					form.onSubmit(
-						data,
-						isUpdate,
-						updateData,
-					),
+				onSubmit={form.handleSubmit(
+					async (data) => {
+						setIsSubmitting(true);
+						try {
+							await form.onSubmit(
+								data,
+								isUpdate,
+								updateData,
+							);
+							// Reset update state after successful submission
+							setIsUpdate(false);
+							setUpdateData(null);
+						} catch (error) {
+							// Error is already handled in the hook
+							console.error(
+								"Form submission error:",
+								error,
+							);
+						} finally {
+							setIsSubmitting(false);
+						}
+					},
 				)}
 				className="ContentPage flex lg:flex-row flex-col gap-4 justify-between w-full"
 			>
@@ -142,6 +160,7 @@ export default function Order() {
 					itemsFields={itemsFields}
 					itemsAppend={itemsAppend}
 					itemsRemove={itemsRemove}
+					isSubmitting={isSubmitting}
 				/>
 			</form>
 		</FormProvider>
@@ -159,6 +178,7 @@ function OrderForm({
 	city,
 	area,
 	cityId,
+	isSubmitting,
 }) {
 	return (
 		<div className="w-full mx-auto flex flex-col max-w-[500px] gap-3 border p-2 rounded-md border-slate-800">
@@ -246,9 +266,14 @@ function OrderForm({
 					</button>
 					<button
 						type="submit"
-						className="bg-cyan-400 dark:text-cyan-900 hover:bg-cyan-600 border cursor-pointer transition-colors text-semibold px-2 py-1 rounded-sm"
+						disabled={isSubmitting}
+						className="bg-cyan-400 dark:text-cyan-900 hover:bg-cyan-600 disabled:bg-gray-400 disabled:cursor-not-allowed border cursor-pointer transition-colors text-semibold px-2 py-1 rounded-sm"
 					>
-						{isUpdate ? "update" : "Create"}
+						{isSubmitting
+							? "Processing..."
+							: isUpdate
+							? "Update"
+							: "Create"}
 					</button>
 				</div>
 				<button

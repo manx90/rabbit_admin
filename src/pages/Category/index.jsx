@@ -42,6 +42,7 @@ import useCollections from "../../hooks/useCollection";
 import { Collections } from "../../api/collectionsApi";
 import { toast } from "react-toastify";
 import { MdDelete } from "@react-icons/all-files/md/MdDelete";
+import MultiSelect from "./components/multiSelect";
 const Category = ({ categories, refetch }) => {
 	const handleCategoryUpdateState = async (
 		id,
@@ -283,11 +284,26 @@ const Collection = ({ categories }) => {
 			toast.success(
 				"Collection deleted successfully!",
 			);
+			refetch();
 		} catch (error) {
-			toast.error(
-				"Failed to delete collection.",
-				error,
-			);
+			console.error(error);
+
+			// Extract error message from different possible error structures
+			let errorMessage =
+				"Failed to delete collection";
+
+			if (error?.response?.data?.message) {
+				errorMessage =
+					error.response.data.message;
+			} else if (error?.response?.data?.error) {
+				errorMessage = error.response.data.error;
+			} else if (error?.message) {
+				errorMessage = error.message;
+			} else if (error?.response?.statusText) {
+				errorMessage = `Error ${error.response.status}: ${error.response.statusText}`;
+			}
+
+			toast.error(errorMessage);
 		}
 	};
 	const categoriesData = categories?.data || [];
@@ -413,7 +429,23 @@ const Collection = ({ categories }) => {
 			setNumSubCategory(0);
 		} catch (error) {
 			console.error(error);
-			toast.error("Failed to create collection");
+
+			// Extract error message from different possible error structures
+			let errorMessage =
+				"Failed to create collection";
+
+			if (error?.response?.data?.message) {
+				errorMessage =
+					error.response.data.message;
+			} else if (error?.response?.data?.error) {
+				errorMessage = error.response.data.error;
+			} else if (error?.message) {
+				errorMessage = error.message;
+			} else if (error?.response?.statusText) {
+				errorMessage = `Error ${error.response.status}: ${error.response.statusText}`;
+			}
+
+			toast.error(errorMessage);
 		}
 	};
 	const { data: Collection, refetch } =
@@ -544,14 +576,20 @@ const Collection = ({ categories }) => {
 					</Row>
 				</Column>
 				<Column className="w-full">
-					<TableOne
-						key={`table-${productIds.length}-${numCategory}-${numSubCategory}`}
-						setproductIds={setproductIds}
-						productIds={productIds}
-						checkbox={true}
-						collectionShow={false}
-						categoryId={numCategory}
-						subcategoryId={numSubCategory}
+					<Controller
+						control={controlCollection}
+						name="productIds"
+						render={({ field }) => (
+							<MultiSelect
+								setproductIds={(ids) => {
+									setproductIds(ids);
+									field.onChange(ids);
+								}}
+								productIds={productIds}
+								categoryId={numCategory}
+								subcategoryId={numSubCategory}
+							/>
+						)}
 					/>
 					<Row className="gap-2 justify-between">
 						<ButtonOne
