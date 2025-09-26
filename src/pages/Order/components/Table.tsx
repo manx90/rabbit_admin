@@ -201,7 +201,7 @@ export default function TableOrigin({
 			accessorKey: "consignee_phone",
 			cell: ({ row }) => {
 				const result =
-					row.original.consignee_phone.replace(
+					String(row.original.consignee_phone).replace(
 						/^0/,
 						"",
 					);

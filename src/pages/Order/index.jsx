@@ -34,18 +34,11 @@ export default function Order() {
 	const { data: city } = useCity();
 	const cityId = watch("city");
 	const { data: area } = useArea(cityId);
-	useEffect(() => {
-		const sub = watch((values) =>
-			console.log("📌 Form Values:", values),
-		);
-		return () => sub.unsubscribe();
-	}, [watch]);
 	const [pending, setPending] = useState();
 	useEffect(() => {
 		const fetchCountPending = async () => {
 			try {
 				const res = await OrderApi.countPending();
-				console.log(res);
 				setPending(res);
 			} catch (error) {
 				console.error(
@@ -63,7 +56,6 @@ export default function Order() {
 			try {
 				const res =
 					await OrderApi.countCancelled();
-				console.log(res);
 				setCancelled(res);
 			} catch (error) {
 				console.error(
@@ -79,7 +71,6 @@ export default function Order() {
 		const fetchCountPending = async () => {
 			try {
 				const res = await OrderApi.countShipped();
-				console.log(res);
 				setShipped(res);
 			} catch (error) {
 				console.error(
@@ -314,19 +305,16 @@ function FormProd({
 	useEffect(() => {
 		setProdId(WatchProdId);
 	}, [WatchProdId]);
-	useEffect(() => {
-		console.log(searchProd, products);
-	}, [setSearchProd, searchProd, products]);
-	useEffect(() => {
-		console.log(
-			"🔍 search:",
-			searchProd,
-			"fetching:",
-			isFetching,
-			"data:",
-			products,
-		);
-	}, [searchProd, isFetching, products]);
+	useEffect(() => {}, [
+		setSearchProd,
+		searchProd,
+		products,
+	]);
+	useEffect(() => {}, [
+		searchProd,
+		isFetching,
+		products,
+	]);
 	return (
 		<div
 			key={field.id}
