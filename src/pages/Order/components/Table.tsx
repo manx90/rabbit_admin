@@ -63,33 +63,61 @@ const OrderItem = ({ item }) => {
 	);
 
 	return (
-		<li className="flex items-center gap-2 py-1 px-2 rounded-md bg-slate-50 dark:bg-slate-800 shadow-sm border border-slate-200 dark:border-slate-700 mb-1">
-			<div className="flex-1 min-w-0">
-				<span className="font-medium text-slate-800 dark:text-slate-100 truncate">
+		<li className="flex items-center gap-3 py-2.5 px-3 rounded-lg bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50 mb-2 hover:shadow-sm transition-shadow">
+			{/* Product Image */}
+			{product?.imgCover && (
+				<div className="flex-shrink-0">
+					<img
+						src={`${
+							import.meta.env
+								.VITE_RABBIT_PI_BASE_URL ?? ""
+						}/uploads/${product.imgCover}`}
+						alt={product.name || "Product"}
+						className="w-20 object-contain rounded-md border border-slate-200 dark:border-slate-600"
+					/>
+				</div>
+			)}
+
+			{/* Product Details */}
+			<div className="flex-1 min-w-0 space-y-1">
+				<div className="font-medium text-slate-900 dark:text-slate-50 text-sm leading-tight">
 					{product ? (
-						product.name
+						<span className="line-clamp-2">
+							{product.name}
+						</span>
 					) : (
 						<span className="italic text-slate-400">
 							Product #{item.productId}
 						</span>
 					)}
-				</span>
-				<span className="mx-2 text-slate-400">
-					|
-				</span>
-				<span className="text-xs text-slate-600 dark:text-slate-300">
-					{item.sizeName}
-				</span>
-				<span className="mx-1 text-slate-400">
-					/
-				</span>
-				<span className="text-xs text-slate-600 dark:text-slate-300">
-					{item.colorName}
-				</span>
+				</div>
+				<div className="flex items-center gap-2 text-xs flex-wrap">
+					<span className="text-slate-600 dark:text-slate-400">
+						<span className="font-medium">
+							Size:
+						</span>{" "}
+						{item.sizeName}
+					</span>
+					<span className="text-slate-300 dark:text-slate-600">
+						•
+					</span>
+					<span className="text-slate-600 dark:text-slate-400">
+						<span className="font-medium">
+							Color:
+						</span>{" "}
+						{item.colorName}
+					</span>
+				</div>
 			</div>
-			<span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-cyan-100 dark:bg-cyan-900 text-cyan-800 dark:text-cyan-200 text-xs font-semibold">
-				× {item.quantity}
-			</span>
+
+			{/* Quantity Badge */}
+			<div className="flex-shrink-0">
+				<div className="px-2.5 py-1 rounded-md bg-slate-100 dark:bg-slate-700 border border-slate-200 dark:border-slate-600">
+					<span className="text-xs font-medium text-slate-700 dark:text-slate-300">
+						Qty: {item.quantity}
+					</span>
+				</div>
+			</div>
 		</li>
 	);
 };
@@ -200,11 +228,9 @@ export default function TableOrigin({
 			header: "Phone",
 			accessorKey: "consignee_phone",
 			cell: ({ row }) => {
-				const result =
-					String(row.original.consignee_phone).replace(
-						/^0/,
-						"",
-					);
+				const result = String(
+					row.original.consignee_phone,
+				).replace(/^0/, "");
 				return <PopOver phone={result} />;
 			},
 		},
@@ -641,55 +667,67 @@ export default function TableOrigin({
 			>
 				{selectedOrder ? (
 					<>
-						<div className="grid grid-cols-3 gap-2">
-							<span className="font-medium text-gray-600 ">
-								Name:
-							</span>
-							<span className="col-span-2 text-gray-900 ">
-								{selectedOrder.consignee_name}
-							</span>
+						<div className="space-y-3">
+							<div className="flex items-start gap-3 py-2 border-b border-slate-200 dark:border-slate-700">
+								<span className="font-semibold text-slate-700 dark:text-slate-300 min-w-[80px]">
+									Name:
+								</span>
+								<span className="flex-1 text-slate-900 dark:text-slate-100">
+									{selectedOrder.consignee_name}
+								</span>
+							</div>
 
-							<span className="font-medium text-gray-600 ">
-								Phone:
-							</span>
-							<span className="col-span-2 text-gray-900 ">
-								{selectedOrder.consignee_phone}
-							</span>
+							<div className="flex items-start gap-3 py-2 border-b border-slate-200 dark:border-slate-700">
+								<span className="font-semibold text-slate-700 dark:text-slate-300 min-w-[80px]">
+									Phone:
+								</span>
+								<span className="flex-1 text-slate-900 dark:text-slate-100">
+									{selectedOrder.consignee_phone}
+								</span>
+							</div>
 
-							<span className="font-medium text-gray-600 ">
-								Address:
-							</span>
-							<span className="col-span-2 text-gray-900 ">
-								{selectedOrder.consignee_address}
-							</span>
+							<div className="flex items-start gap-3 py-2 border-b border-slate-200 dark:border-slate-700">
+								<span className="font-semibold text-slate-700 dark:text-slate-300 min-w-[80px]">
+									Address:
+								</span>
+								<span className="flex-1 text-slate-900 dark:text-slate-100">
+									{
+										selectedOrder.consignee_address
+									}
+								</span>
+							</div>
 
-							<span className="font-medium text-gray-600 ">
-								Status:
-							</span>
-							<span
-								className={`col-span-2 px-2 py-0.5 rounded-md text-xs font-medium w-fit
+							<div className="flex items-start gap-3 py-2 border-b border-slate-200 dark:border-slate-700">
+								<span className="font-semibold text-slate-700 dark:text-slate-300 min-w-[80px]">
+									Status:
+								</span>
+								<span
+									className={`px-3 py-1 rounded-lg text-xs font-semibold uppercase tracking-wide
             ${
 							selectedOrder.status === "delivered"
-								? "bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300"
-								: "bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300"
+								? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300"
+								: "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300"
 						}`}
-							>
-								{selectedOrder.status}
-							</span>
+								>
+									{selectedOrder.status}
+								</span>
+							</div>
 
-							<span className="font-medium text-gray-600 ">
-								Amount:
-							</span>
-							<span className="col-span-2 font-semibold text-gray-900 ">
-								{selectedOrder.cod_amount}
-							</span>
+							<div className="flex items-start gap-3 py-2">
+								<span className="font-semibold text-slate-700 dark:text-slate-300 min-w-[80px]">
+									Amount:
+								</span>
+								<span className="flex-1 text-lg font-bold text-slate-900 dark:text-slate-100">
+									{selectedOrder.cod_amount}
+								</span>
+							</div>
 						</div>
 
-						<div>
-							<h4 className="text-sm font-semibold text-gray-700 mb-1">
-								Items:
+						<div className="mt-6">
+							<h4 className="text-sm font-bold text-slate-800 dark:text-slate-200 mb-3 uppercase tracking-wide">
+								Order Items
 							</h4>
-							<ul className="list-disc pl-5 space-y-1 text-gray-800 ">
+							<ul className="space-y-0">
 								{selectedOrder.items.map(
 									(item) => (
 										<OrderItem

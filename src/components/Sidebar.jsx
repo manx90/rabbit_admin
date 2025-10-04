@@ -6,6 +6,7 @@ import {
 	Megaphone,
 	User,
 	ListTree,
+	Table2,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import SidebarToggle from "./SidebarToggle";
@@ -86,6 +87,16 @@ export default function Sidebar({
 					isActive={
 						window.location.pathname ===
 						"/category"
+					}
+				/>
+				<NavLink
+					to="/tables"
+					open={open}
+					setOpen={setOpen}
+					icon={<Table2 />}
+					label="Size Tables"
+					isActive={
+						window.location.pathname === "/tables"
 					}
 				/>
 				<NavLink

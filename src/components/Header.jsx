@@ -45,7 +45,7 @@ export default function Header({
 						: pathname === "/advertisements"
 						? "Advertising"
 						: pathname === "/category"
-						? "Category" 
+						? "Category"
 						: "Rabbit Admin Dashboard"}
 				</h1>
 			</div>

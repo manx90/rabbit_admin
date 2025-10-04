@@ -278,6 +278,9 @@ const Collection = ({ categories }) => {
 	);
 	const [open, setOpen] = useState(null);
 	const [idDelete, setIdDelete] = useState(null);
+	const { data: Collection, refetch } =
+		useCollections();
+
 	const handleDelete = async (id) => {
 		try {
 			await Collections.DeleteOne(id);
@@ -448,8 +451,6 @@ const Collection = ({ categories }) => {
 			toast.error(errorMessage);
 		}
 	};
-	const { data: Collection, refetch } =
-		useCollections();
 	return (
 		<FormProvider {...methods}>
 			<Form

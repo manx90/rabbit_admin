@@ -56,6 +56,27 @@ const Product = ({ categories }) => {
 				limit: limit,
 			}),
 	});
+
+	// Fetch size tables
+	const { data: sizeTables } = useQuery({
+		queryKey: ["sizeTables"],
+		queryFn: async () => {
+			const response = await fetch(
+				`${
+					import.meta.env.VITE_RABBIT_PI_BASE_URL
+				}/size-tables`,
+				{
+					headers: {
+						Authorization: `Bearer ${localStorage.getItem(
+							"token",
+						)}`,
+					},
+				},
+			);
+			return response.json();
+		},
+	});
+
 	console.log(products);
 
 	const handleRemoveColor = (colorIndex) => {
@@ -114,6 +135,7 @@ const Product = ({ categories }) => {
 			subcategory: "",
 			season: "",
 			videoLink: "",
+			sizeTableId: "none",
 			sizes: [
 				{
 					sizeName: "",
@@ -170,6 +192,10 @@ const Product = ({ categories }) => {
 		setValue("description", item.description);
 		setValue("season", item.season);
 		setValue("videoLink", item.videoLink);
+		setValue(
+			"sizeTableId",
+			item.sizeTable?.id || "none",
+		);
 		// Convert date string to Date object if needed
 		const dateValue = item.date
 			? new Date(item.date)
@@ -381,34 +407,17 @@ const Product = ({ categories }) => {
 				}
 			});
 		}
-		if (
-			data.imgMeasure &&
-			data.imgMeasure.length > 0
-		) {
-			// Extract the actual File object from FileWithPreview wrapper
-			const measureFile = data.imgMeasure[0];
-			if (measureFile) {
-				formdata.append(
-					"imgMeasure",
-					measureFile,
-				);
-			}
-		}
-		if (
-			data.imgSizeChart &&
-			data.imgSizeChart.length > 0
-		) {
-			// Extract the actual File object from FileWithPreview wrapper
-			const sizeChartFile = data.imgSizeChart[0];
-			if (sizeChartFile) {
-				formdata.append(
-					"imgSizeChart",
-					sizeChartFile,
-				);
-			}
-		}
 		formdata.append("videoLink", data.videoLink);
 		formdata.append("season", data.season);
+		if (
+			data.sizeTableId &&
+			data.sizeTableId !== "none"
+		) {
+			formdata.append(
+				"sizeTableId",
+				data.sizeTableId,
+			);
+		}
 		try {
 			setLoadingSubmit(true);
 
@@ -651,6 +660,64 @@ const Product = ({ categories }) => {
 									/>
 								</Column>
 							</Row>
+							<Row className="w-full">
+								<Column className="w-full">
+									<Label className="text-gray-500 dark:text-gray-400">
+										Size Table (Optional)
+									</Label>
+									<Controller
+										control={control}
+										name="sizeTableId"
+										render={({ field }) => (
+											<Select
+												className="w-full bg-gray-100 dark:bg-gray-700"
+												value={
+													field.value || "none"
+												}
+												onValueChange={(
+													value,
+												) => {
+													field.onChange(
+														value === "none"
+															? ""
+															: value,
+													);
+												}}
+											>
+												<SelectTrigger className="w-full">
+													<SelectValue
+														placeholder="Select Size Table (Optional)"
+														className="text-gray-500 dark:text-gray-400"
+													/>
+												</SelectTrigger>
+												<SelectContent className="bg-white dark:bg-gray-700 dark:border-gray-600">
+													<SelectItem
+														value="none"
+														className="dark:text-gray-300"
+													>
+														No Size Table
+													</SelectItem>
+													{sizeTables?.map(
+														(sizeTable) => (
+															<SelectItem
+																key={sizeTable.id}
+																value={
+																	sizeTable.id
+																}
+																className="dark:text-gray-300 dark:hover:bg-gray-600"
+															>
+																{
+																	sizeTable.tableName
+																}
+															</SelectItem>
+														),
+													)}
+												</SelectContent>
+											</Select>
+										)}
+									/>
+								</Column>
+							</Row>
 						</Column>
 
 						<Row className="w-full justify-between">
@@ -770,18 +837,6 @@ const Product = ({ categories }) => {
 							resetKey={resetKey}
 							name={"Img Cover"}
 							registerName={"imgCover"}
-							maxFiles={1}
-						/>
-						<FileUpload
-							resetKey={resetKey}
-							name={"Img Measure"}
-							registerName={"imgMeasure"}
-							maxFiles={1}
-						/>
-						<FileUpload
-							resetKey={resetKey}
-							name={"Img Size Chart"}
-							registerName={"imgSizeChart"}
 							maxFiles={1}
 						/>
 					</Section>
